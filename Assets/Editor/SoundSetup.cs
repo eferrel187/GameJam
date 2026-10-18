@@ -68,6 +68,7 @@ public static class SoundSetup
         lib.manoSale = One("mano_sale");
         lib.manoAgarra = One("mano_agarra");
         lib.manoArrastra = One("mano_arrastra");
+        lib.rodillo = One("rodillo_loop");
 
         EditorUtility.SetDirty(lib);
         AssetDatabase.SaveAssets();
@@ -75,7 +76,7 @@ public static class SoundSetup
         int count = lib.pasos.Length + lib.pasosCorrer.Length + lib.pasosAgachado.Length +
             new Object[] { lib.salto, lib.aterrizar, lib.golpe, lib.muerte, lib.antorcha, lib.puerta,
                 lib.terror, lib.llave, lib.trampaCepo, lib.trampaSuelo, lib.ambiente,
-                lib.manoSale, lib.manoAgarra, lib.manoArrastra }.Count(o => o != null);
+                lib.manoSale, lib.manoAgarra, lib.manoArrastra, lib.rodillo }.Count(o => o != null);
         System.IO.File.WriteAllText("informe_sonidos.txt", "Sonidos configurados: " + count);
         Debug.Log("Sonidos configurados: " + count + " clips desde " + Folder);
     }

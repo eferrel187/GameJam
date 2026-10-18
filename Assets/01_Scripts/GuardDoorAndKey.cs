@@ -17,6 +17,27 @@ public class GuardDoorAndKey : MonoBehaviour
         public ArchDoor arch;       // puerta doble de arco (se abre sola)
     }
 
+    /// Avisos para las trampas de los niveles.
+    public static event System.Action KeyPicked;
+    public static event System.Action KeyLost;
+    public static bool HasKey { get; private set; }
+
+    /// La llave que lleva el jugador es falsa (no abre: activa una trampa).
+    public static bool KeyIsFake { get; private set; }
+    /// Se intentó abrir la puerta con la llave falsa.
+    public static event System.Action FakeDoorTried;
+
+    static GuardDoorAndKey current;
+
+    /// La llave falsa: se ve y se anuncia igual que la verdadera.
+    public static void GiveFakeKey()
+    {
+        if (current == null || current.hasKey) return;
+        current.hasKey = true;
+        KeyIsFake = true;
+        GameAudio.Llave();
+    }
+
     readonly List<Door> doors = new List<Door>();
     Transform player;
     GameObject keyObject;
@@ -46,8 +67,27 @@ public class GuardDoorAndKey : MonoBehaviour
                 System.StringComparison.OrdinalIgnoreCase);
     }
 
+#if UNITY_EDITOR
+    /// Solo pruebas en el editor: F4 da la llave.
+    void LateUpdate()
+    {
+        // F1 da la llave falsa.
+        if (Keyboard.current != null && Keyboard.current.f1Key.wasPressedThisFrame && !hasKey)
+            GiveFakeKey();
+        if (Keyboard.current != null && Keyboard.current.f4Key.wasPressedThisFrame && !hasKey)
+        {
+            hasKey = true; HasKey = true;
+            if (keyObject) keyObject.SetActive(false);
+            KeyPicked?.Invoke();
+        }
+    }
+#endif
+
     void Start()
     {
+        current = this;
+        HasKey = false;
+        KeyIsFake = false;
         foreach (Transform t in
             FindObjectsByType<Transform>(FindObjectsSortMode.None))
         {
@@ -195,7 +235,7 @@ public class GuardDoorAndKey : MonoBehaviour
 
         Vector3 position = PlayerCenter();
 
-        if (!hasKey && keyObject && keyObject.activeInHierarchy)
+        if ((!hasKey || KeyIsFake) && keyObject && keyObject.activeInHierarchy)
         {
             Vector3 closest = keyBounds.ClosestPoint(position);
 
@@ -203,8 +243,18 @@ public class GuardDoorAndKey : MonoBehaviour
             {
                 hasKey = true;
                 keyObject.SetActive(false);
-                message = "¡Recogiste la llave!";
+                // En los niveles 2 y 3 sin mensaje (solo sonido e icono):
+                // así no se distingue la llave buena de la falsa.
+                string level = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+                if (level == "Tutorial" || level == "Nivel1")
+                {
+                    message = "¡Recogiste la llave!";
+                    messageUntil = Time.time + 2.5f;
+                }
                 GameAudio.Llave();
+                HasKey = true;
+                KeyIsFake = false;
+                KeyPicked?.Invoke();
                 messageUntil = Time.time + 2.5f;
             }
         }
@@ -236,7 +286,14 @@ public class GuardDoorAndKey : MonoBehaviour
             if (Keyboard.current != null &&
                 Keyboard.current.eKey.wasPressedThisFrame)
             {
-                if (hasKey)
+                if (hasKey && KeyIsFake)
+                {
+                    // La llave no gira... y el suelo se abre.
+                    message = "La llave no gira...";
+                    messageUntil = Time.time + 2f;
+                    FakeDoorTried?.Invoke();
+                }
+                else if (hasKey)
                 {
                     nearest.open = true;
                     prompt = "";
@@ -350,6 +407,9 @@ public class GuardDoorAndKey : MonoBehaviour
     void ResetKeyAfterDeath()
     {
         hasKey = false;
+        HasKey = false;
+        KeyIsFake = false;
+        KeyLost?.Invoke();
         prompt = "";
         message = "";
 

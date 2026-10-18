@@ -24,6 +24,10 @@ public static class GameState
 
     /// Una cinemática controla la cámara (la cámara normal no la mueve).
     public static bool CinematicCamera;
+
+    /// Vidas con las que se entra al siguiente nivel (-1 = completas).
+    /// El Nivel1 (y el tutorial) siempre empiezan con todas.
+    public static int CarriedLives = -1;
 }
 
 /// <summary>
@@ -41,6 +45,7 @@ static class GameBootstrap
         GameState.MenuShownThisSession = false;
         GameState.Paused = false;
         GameState.CinematicCamera = false;
+        GameState.CarriedLives = -1;
         Time.timeScale = 1f;
 
         SceneManager.sceneLoaded -= OnSceneLoaded;
@@ -49,6 +54,9 @@ static class GameBootstrap
 
     static void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        // Primero las reglas del nivel (agrupan puertas, colisiones...)
+        // para que los demás sistemas ya las encuentren.
+        LevelSetup.Install(scene);
         GameFlow.Install();
         GuardDoorAndKey.Install();
         GuardCameraCollision.Install();
@@ -114,6 +122,11 @@ public class GameFlow : MonoBehaviour
     /// Carga la siguiente escena del Build (o vuelve al menú si no hay más).
     public static void LoadNextScene()
     {
+        // Las vidas pasan al siguiente nivel (desde el tutorial, completas).
+        GuardHealth h = FindFirstObjectByType<GuardHealth>();
+        string current = SceneManager.GetActiveScene().name;
+        GameState.CarriedLives = current.StartsWith("Nivel") && h != null && h.Lives > 0 ? h.Lives : -1;
+
         int next = SceneManager.GetActiveScene().buildIndex + 1;
 
         if (next <= 0 || next >= SceneManager.sceneCountInBuildSettings)
@@ -353,7 +366,10 @@ public class GameFlow : MonoBehaviour
     {
         yield return new WaitForSecondsRealtime(3.5f);
         GameState.MenuShownThisSession = true;
-        yield return FadeAndLoad(0);
+        // Sin vidas: se vuelve a empezar desde el Nivel 1 (no el tutorial), con todas las vidas.
+        GameState.CarriedLives = -1;
+        int level1 = SceneUtility.GetBuildIndexByScenePath("Assets/00_Scenes/Nivel1.unity");
+        yield return FadeAndLoad(level1 >= 0 ? level1 : 0);
     }
 
     void RestartLevel()

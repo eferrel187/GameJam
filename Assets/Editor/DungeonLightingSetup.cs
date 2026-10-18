@@ -25,6 +25,7 @@ public static class DungeonLightingSetup
         "Assets/00_Scenes/Tutorial.unity",
         "Assets/00_Scenes/Nivel1.unity",
         "Assets/00_Scenes/Nivel2.unity",
+        "Assets/00_Scenes/Nivel3.unity",
     };
 
     const string Folder = "Assets/04_Prefabs/Antorcha";
@@ -155,6 +156,7 @@ public static class DungeonLightingSetup
         foreach (GameObject root in scene.GetRootGameObjects())
             foreach (Transform t in root.GetComponentsInChildren<Transform>(true))
             {
+                if (t == null) continue;   // una luz antigua ya borrada
                 bool pit = t.name.StartsWith("Spikes_Platform");
                 bool bear = t.name.StartsWith("BearTrap");
                 if (!pit && !bear) continue;
@@ -166,6 +168,8 @@ public static class DungeonLightingSetup
                 if (rs.Length == 0) continue;
                 Bounds b = rs[0].bounds;
                 foreach (Renderer r in rs) b.Encapsulate(r.bounds);
+                // Solo los fosos (bajo el suelo); las púas a la vista ya las iluminan las antorchas.
+                if (pit && b.max.y > -1f) continue;
 
                 GameObject go = new GameObject("LuzTrampa");
                 go.transform.SetParent(t, true);

@@ -24,6 +24,10 @@ public class GuardHealth : MonoBehaviour
     void Awake()
     {
         Lives = maxLives;
+        // Las vidas perdidas en el nivel anterior se mantienen.
+        string level = gameObject.scene.name;
+        if (GameState.CarriedLives > 0 && level != "Nivel1" && level != "Tutorial")
+            Lives = Mathf.Min(maxLives, GameState.CarriedLives);
         spawn = transform.position;
         facing = transform.rotation;
         heart = Resources.Load<Texture2D>("GuardHeart");

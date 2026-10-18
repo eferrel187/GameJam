@@ -146,6 +146,26 @@ public class CameraIntroFollow : MonoBehaviour
         followOffset = -forward * distance + Vector3.up * cameraHeight;
 
         BuildRoute();
+
+        // En estos niveles se empieza a jugar directamente (sin recorrido).
+        if (System.Array.IndexOf(NoIntroScenes, gameObject.scene.name) >= 0)
+            FinishIntroNow();
+    }
+
+    /// Niveles que empiezan sin la animación de cámara.
+    public static string[] NoIntroScenes = { "Nivel2", "Nivel3" };
+
+    private void FinishIntroNow()
+    {
+        int last = positions.Length - 1;
+        transform.SetPositionAndRotation(positions[last], rotations[last]);
+        introFinished = true;
+        smoothVelocity = Vector3.zero;
+        mouseYaw = transform.eulerAngles.y;
+        mousePitch = Mathf.DeltaAngle(0f, transform.eulerAngles.x);
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+        UnlockControls();
     }
 
     private void LockControls()

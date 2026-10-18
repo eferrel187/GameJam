@@ -40,6 +40,7 @@ MonoBehaviour:
   manoSale: {fileID: 8300000, guid: 1847d0950a93f43e2bb6b42387bdbe8e, type: 3}
   manoAgarra: {fileID: 8300000, guid: 296acfb7738694a50b0fb383f36b5503, type: 3}
   manoArrastra: {fileID: 8300000, guid: 1613b4b9293074e6395c6e4069a97393, type: 3}
+  rodillo: {fileID: 8300000, guid: c688ec3105cfe4510a4a160f8fc57692, type: 3}
   volumenPasos: 0.55
   volumenAntorcha: 0.4
   volumenAmbiente: 0.3

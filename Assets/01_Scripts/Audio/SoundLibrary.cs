@@ -30,6 +30,9 @@ public class SoundLibrary : ScriptableObject
     public AudioClip manoAgarra;
     public AudioClip manoArrastra;
 
+    [Header("Trampas de los niveles")]
+    public AudioClip rodillo;
+
     [Header("Volúmenes")]
     [Range(0f, 1f)] public float volumenPasos = 0.55f;
     [Range(0f, 1f)] public float volumenAntorcha = 0.4f;

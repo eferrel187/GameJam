@@ -65,6 +65,7 @@ public class GuardPlayerMovement : MonoBehaviour
 
 #if UNITY_EDITOR
     private static bool debugAutoForward;
+    private static bool debugCrouch;
 #endif
     private CharacterController controller;
     private float verticalSpeed;
@@ -156,10 +157,35 @@ public class GuardPlayerMovement : MonoBehaviour
             // Solo para pruebas en el editor: F8 = avanzar solo (como mantener W).
             if (keyboard.f8Key.wasPressedThisFrame) debugAutoForward = !debugAutoForward;
             if (debugAutoForward) input.y = 1f;
-            // F9 = darse la vuelta (cámara incluida).
-            if (keyboard.f9Key.wasPressedThisFrame && cameraTransform != null)
+            // F2 = perder una vida (probar Game Over).
+            if (keyboard.f2Key.wasPressedThisFrame)
+                GetComponent<GuardHealth>()?.Hit();
+            // F3 = saltar al final del nivel (delante de la puerta con llave).
+            if (keyboard.f3Key.wasPressedThisFrame)
             {
-                transform.Rotate(0f, 180f, 0f);
+                GameObject door = GameObject.Find("Puerta_Llave");
+                if (door != null)
+                {
+                    ArchDoor arch = door.GetComponent<ArchDoor>();
+                    Vector3 target = arch != null ? arch.Center - arch.openTowards.normalized * 1.6f : door.transform.position;
+                    controller.enabled = false;
+                    transform.position = new Vector3(target.x, transform.position.y, target.z);
+                    if (arch != null) transform.rotation = Quaternion.LookRotation(arch.openTowards);
+                    controller.enabled = true;
+                    CameraIntroFollow f = cameraTransform != null ? cameraTransform.GetComponent<CameraIntroFollow>() : null;
+                    if (f != null) f.SnapBehindPlayer();
+                }
+            }
+            // F7 = agacharse sin mantener la tecla.
+            if (keyboard.f7Key.wasPressedThisFrame) debugCrouch = !debugCrouch;
+            if (debugCrouch) crouchHeld = true;
+            // F9 = darse la vuelta, F5/F6 = girar 90° (cámara incluida).
+            float debugTurn = keyboard.f9Key.wasPressedThisFrame ? 180f
+                            : keyboard.f5Key.wasPressedThisFrame ? -90f
+                            : keyboard.f6Key.wasPressedThisFrame ? 90f : 0f;
+            if (debugTurn != 0f && cameraTransform != null)
+            {
+                transform.Rotate(0f, debugTurn, 0f);
                 CameraIntroFollow f = cameraTransform.GetComponent<CameraIntroFollow>();
                 if (f != null) f.SnapBehindPlayer();
             }

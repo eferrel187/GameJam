@@ -3,7 +3,7 @@ using UnityEngine;
 [DefaultExecutionOrder(10000)]
 public class GuardCameraCollision : MonoBehaviour
 {
-    public float radius = 0.25f;
+    public float radius = 0.2f;
     public float wallMargin = 0.08f;
 
     Transform player;
@@ -91,6 +91,11 @@ public class GuardCameraCollision : MonoBehaviour
             // Ignora el cuerpo y los colliders del jugador.
             if (hit.transform == player ||
                 hit.transform.IsChildOf(player))
+                continue;
+
+            // La esfera ya tocaba algo al salir (p. ej. el borde de un hueco
+            // junto al jugador): eso no es un obstáculo entre jugador y cámara.
+            if (hit.distance <= 0f && hit.point == Vector3.zero)
                 continue;
 
             safeDistance = Mathf.Min(

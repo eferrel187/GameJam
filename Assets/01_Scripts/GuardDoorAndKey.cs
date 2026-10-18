@@ -14,6 +14,7 @@ public class GuardDoorAndKey : MonoBehaviour
         public Vector3 hinge;
         public bool hingeReady;
         public float openAngle;
+        public ArchDoor arch;       // puerta doble de arco (se abre sola)
     }
 
     readonly List<Door> doors = new List<Door>();
@@ -26,8 +27,8 @@ public class GuardDoorAndKey : MonoBehaviour
     float messageUntil;
     Texture2D circle;
 
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-    static void Install()
+    // Lo llama GameBootstrap en cada escena cargada.
+    public static void Install()
     {
         if (FindFirstObjectByType<GuardDoorAndKey>() != null)
             return;
@@ -56,7 +57,11 @@ public class GuardDoorAndKey : MonoBehaviour
             if (Matches(t.name, "Wall") && t.name != "Wall (35)")
                 AddSolidColliders(t.gameObject);
 
-            if (Matches(t.name, "Door_Straight"))
+            // Antorchas sólidas: ni el jugador ni la cámara las atraviesan.
+            if (Matches(t.name, "Torch"))
+                AddSolidColliders(t.gameObject);
+
+            if (Matches(t.name, "Door_Straight") || t.name == "Puerta_Llave")
             {
                 AddSolidColliders(t.gameObject);
 
@@ -65,7 +70,8 @@ public class GuardDoorAndKey : MonoBehaviour
                     root = t,
                     closed = t.localRotation,
                     colliders = t.GetComponentsInChildren<Collider>(),
-                    bounds = GetBounds(t.gameObject)
+                    bounds = GetBounds(t.gameObject),
+                    arch = t.GetComponent<ArchDoor>()
                 });
             }
 
@@ -73,6 +79,10 @@ public class GuardDoorAndKey : MonoBehaviour
             {
                 keyObject = t.gameObject;
                 keyBounds = GetBounds(keyObject);
+
+                // Flota y gira para llamar la atención.
+                if (keyObject.GetComponent<KeyFloat>() == null)
+                    keyObject.AddComponent<KeyFloat>();
             }
         }
 
@@ -229,6 +239,7 @@ public class GuardDoorAndKey : MonoBehaviour
                 {
                     nearest.open = true;
                     prompt = "";
+                    if (nearest.arch != null) nearest.arch.Open();
 
                     // El paso queda libre al abrir.
                     foreach (Collider collider in nearest.colliders)
@@ -236,7 +247,7 @@ public class GuardDoorAndKey : MonoBehaviour
                 }
                 else
                 {
-                    message = "Primero recoge Key4.";
+                    message = "Primero busca la llave.";
                     messageUntil = Time.time + 2f;
                 }
             }
@@ -244,7 +255,7 @@ public class GuardDoorAndKey : MonoBehaviour
 
         foreach (Door door in doors)
         {
-            if (!door.root || !door.open)
+            if (!door.root || !door.open || door.arch != null)
                 continue;
 
             if (!door.hingeReady)
@@ -275,6 +286,9 @@ public class GuardDoorAndKey : MonoBehaviour
 
     void OnGUI()
     {
+        if (GameState.HudHidden)
+            return;
+
         float scale = Mathf.Clamp(Screen.width / 1280f, .65f, 2f);
 
         if (hasKey && circle)
@@ -324,7 +338,7 @@ public class GuardDoorAndKey : MonoBehaviour
         {
             GUI.Box(
                 new Rect(Screen.width / 2f - 190f * scale,
-                    85f * scale, 380f * scale, 45f * scale),
+                    230f * scale, 380f * scale, 45f * scale),
                 message, style);
         }
     }

@@ -11,9 +11,8 @@ public class GuardCameraCollision : MonoBehaviour
     GuardPlayerMovement movement;
     CharacterController controller;
 
-    [RuntimeInitializeOnLoadMethod(
-        RuntimeInitializeLoadType.AfterSceneLoad)]
-    static void Install()
+    // Lo llama GameBootstrap en cada escena cargada.
+    public static void Install()
     {
         Camera cam = Camera.main;
 
@@ -41,6 +40,14 @@ public class GuardCameraCollision : MonoBehaviour
     bool restorePosition;
     float currentDistance = -1f;
     float distanceVelocity;
+
+    /// Olvida la distancia suavizada (tras un teletransporte).
+    public void ResetDistance()
+    {
+        currentDistance = -1f;
+        distanceVelocity = 0f;
+        restorePosition = false;
+    }
 
     void Update()
     {

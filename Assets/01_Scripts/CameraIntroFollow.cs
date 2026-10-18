@@ -48,8 +48,42 @@ public class CameraIntroFollow : MonoBehaviour
     private float mouseYaw;
     private float mousePitch;
 
+    [Header("Caídas")]
+    [Tooltip("Al caer (o estar tirado) la cámara mira desde arriba a esta altura.")]
+    [SerializeField] private float overheadHeight = 3.5f;
+    [Tooltip("Segundos en el aire para considerar que es una caída (un salto dura ~0.7 s).")]
+    [SerializeField] private float fallAirTime = 0.75f;
+
+    private GuardHealth health;
+    private float airTime;
+
+    private bool fallLatched;
+
+    /// 0 = normal, 1 = golpeado en el suelo, 2 = cayendo / en un pozo.
+    private int FallState()
+    {
+        if (movement != null && movement.enabled)
+        {
+            airTime = movement.IsGrounded ? 0f : airTime + Time.deltaTime;
+
+            // Un salto normal no baja a más de ~6.6 m/s: más rápido = caída.
+            CharacterController cc = player.GetComponent<CharacterController>();
+            bool fastFall = cc != null && !movement.IsGrounded && cc.velocity.y < -7.5f;
+
+            if (airTime > fallAirTime || fastFall) fallLatched = true;
+            else if (movement.IsGrounded) fallLatched = false;
+        }
+
+        if (fallLatched) return 2;
+        if (health != null && health.IsKnockedDown) return 1;
+        return 0;
+    }
+
     private void UpdateMouseLook()
     {
+        // En pausa o en Game Over el ratón es para los botones.
+        if (GameState.Paused || GameState.HudHidden) return;
+
         if (Keyboard.current != null &&
             Keyboard.current.escapeKey.wasPressedThisFrame)
         {
@@ -94,6 +128,7 @@ public class CameraIntroFollow : MonoBehaviour
         }
 
         movement = player.GetComponent<GuardPlayerMovement>();
+        health = player.GetComponent<GuardHealth>();
         walkAnimation = player.GetComponent<GuardWalkAnimation>();
         playerAnimator = player.GetComponentInChildren<Animator>();
 
@@ -152,9 +187,14 @@ public class CameraIntroFollow : MonoBehaviour
         controlsLocked = false;
     }
 
+    // Altura a la que mira la cámara (baja al agacharse).
+    private float currentLook = -1f;
+    private float crouchBlend;
+
     private Quaternion FollowRotation(Vector3 cameraPosition)
     {
-        Vector3 target = player.position + Vector3.up * lookHeight;
+        float look = currentLook >= 0f ? currentLook : lookHeight;
+        Vector3 target = player.position + Vector3.up * look;
         Vector3 direction = target - cameraPosition;
 
         return direction.sqrMagnitude > 0.0001f
@@ -210,6 +250,9 @@ public class CameraIntroFollow : MonoBehaviour
 
         if (!introFinished)
         {
+            // Espera a que termine el menú y el tutorial.
+            if (GameState.HoldIntro) return;
+
             elapsed += Time.deltaTime;
 
             if (elapsed < initialPause) return;
@@ -256,20 +299,64 @@ public class CameraIntroFollow : MonoBehaviour
             return;
         }
 
+        // Durante una cinemática la cámara la mueve la secuencia.
+        if (GameState.CinematicCamera) return;
+
         UpdateMouseLook();
 
-        Quaternion orbit = Quaternion.Euler(mousePitch, mouseYaw, 0f);
-        Vector3 pivot = player.position + Vector3.up * lookHeight;
+        // Agachado: la cámara baja y mira casi horizontal, para pasar
+        // por debajo de techos bajos sin quedar dentro de ellos.
+        bool crouching = movement != null && movement.IsCrouching;
+        crouchBlend = Mathf.MoveTowards(crouchBlend, crouching ? 1f : 0f,
+            Time.deltaTime * 4f);
+        currentLook = Mathf.Lerp(lookHeight, lookHeight * 0.45f, crouchBlend);
+        float pitch = Mathf.Lerp(mousePitch, Mathf.Min(mousePitch, -2f), crouchBlend);
+
+        Quaternion orbit = Quaternion.Euler(pitch, mouseYaw, 0f);
+        Vector3 pivot = player.position + Vector3.up * currentLook;
         Vector3 desiredPosition =
             pivot - orbit * Vector3.forward * distance;
+
+        int fall = FallState();
+        bool overhead = fall != 0;
+        Vector3 back = Quaternion.Euler(0f, mouseYaw, 0f) * Vector3.back;
+
+        if (fall == 2)
+        {
+            // Sigue la caída desde arriba (por el hueco por donde cayó).
+            desiredPosition = pivot + Vector3.up * overheadHeight + back * 0.2f;
+        }
+        else if (fall == 1)
+        {
+            // Golpeado en el suelo: plano alto desde atrás, bajo el techo.
+            desiredPosition = pivot + Vector3.up * 1.6f + back * 2f;
+        }
 
         transform.position = Vector3.SmoothDamp(
             transform.position,
             desiredPosition,
             ref smoothVelocity,
-            followSmoothTime);
+            overhead ? followSmoothTime * 2f : followSmoothTime);
 
         transform.rotation = FollowRotation(transform.position);
+    }
+
+    /// Coloca la cámara de golpe detrás del jugador (al reaparecer).
+    public void SnapBehindPlayer()
+    {
+        if (player == null || !introFinished) return;
+
+        mouseYaw = player.eulerAngles.y;
+        mousePitch = 12f;
+
+        Quaternion orbit = Quaternion.Euler(mousePitch, mouseYaw, 0f);
+        Vector3 pivot = player.position + Vector3.up * lookHeight;
+        transform.position = pivot - orbit * Vector3.forward * distance;
+        transform.rotation = FollowRotation(transform.position);
+        smoothVelocity = Vector3.zero;
+
+        GuardCameraCollision collision = GetComponent<GuardCameraCollision>();
+        if (collision != null) collision.ResetDistance();
     }
 
     private void OnDisable()

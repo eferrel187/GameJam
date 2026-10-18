@@ -15,6 +15,7 @@ public class LinkedFloorTrap : MonoBehaviour
         // First and second full passes count on exit; third entry collapses underfoot.
         if (beginning && CompletedPasses >= passesBeforeCollapse - 1) {
             collapsed = true;
+            GameAudio.TrampaSuelo(sensor.transform.position);
             if (leftFloor) leftFloor.SetActive(false);
             if (rightFloor) rightFloor.SetActive(false);
             Debug.Log("Trampa: tercera pasada, ambos pisos desaparecen.");

@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc8b4021c65f2493690031dcde4566a2, type: 3}
+  m_Name: SoundLibrary
+  m_EditorClassIdentifier: Assembly-CSharp::SoundLibrary
+  pasos:
+  - {fileID: 8300000, guid: 344871af47a204fc2a5481ad0366bcd5, type: 3}
+  - {fileID: 8300000, guid: 8ce8e65d393c34f938ab04f77e2d1f6a, type: 3}
+  - {fileID: 8300000, guid: 3c53c801b94714b00a0ea0dece971ac6, type: 3}
+  - {fileID: 8300000, guid: da30a0efab485488d80b9d15e5b8a620, type: 3}
+  pasosCorrer:
+  - {fileID: 8300000, guid: 726bf06912971410997395d3dc0408c8, type: 3}
+  - {fileID: 8300000, guid: ad1a564101bc24ddba08405cbbd40c71, type: 3}
+  - {fileID: 8300000, guid: 37b8f1aed2b544bb99b193a0686b7ed6, type: 3}
+  - {fileID: 8300000, guid: ff8d049e624b04a8bbee1e78382dac1f, type: 3}
+  pasosAgachado:
+  - {fileID: 8300000, guid: 66063fb3ca5954ddf8cd0acf5a49219d, type: 3}
+  - {fileID: 8300000, guid: 4b0cd92a42fa843b9a7066f6c44fdd58, type: 3}
+  - {fileID: 8300000, guid: d0f7557e865fe4776995c6189e46bc34, type: 3}
+  salto: {fileID: 8300000, guid: b513534ae6f8f4ca588592faa47d0d56, type: 3}
+  aterrizar: {fileID: 8300000, guid: 586ce6839b8684da1a986a99223a2151, type: 3}
+  golpe: {fileID: 8300000, guid: ae3c09d705d6d476185a1047bd557ae3, type: 3}
+  muerte: {fileID: 8300000, guid: 4b5c05473f6404d1b9ad02ca0d26fe24, type: 3}
+  antorcha: {fileID: 8300000, guid: f9cef88f7f16f43bc92d7efd5e260f1c, type: 3}
+  puerta: {fileID: 8300000, guid: f8be1833649704114adc78d52db8ade9, type: 3}
+  terror: {fileID: 8300000, guid: 910ac999d695c410abdccbd63737a543, type: 3}
+  llave: {fileID: 8300000, guid: 5d88e659b36074c2ebde3e5a3e5fa336, type: 3}
+  trampaCepo: {fileID: 8300000, guid: 97a757873ed914ed3afd07e992eb567a, type: 3}
+  trampaSuelo: {fileID: 8300000, guid: 43653d0de8c6b42e985b6902d8ee433b, type: 3}
+  ambiente: {fileID: 8300000, guid: 2b934ffb894fa44f1a045a0c3ca7bd8f, type: 3}
+  manoSale: {fileID: 8300000, guid: 1847d0950a93f43e2bb6b42387bdbe8e, type: 3}
+  manoAgarra: {fileID: 8300000, guid: 296acfb7738694a50b0fb383f36b5503, type: 3}
+  manoArrastra: {fileID: 8300000, guid: 1613b4b9293074e6395c6e4069a97393, type: 3}
+  volumenPasos: 0.55
+  volumenAntorcha: 0.4
+  volumenAmbiente: 0.3

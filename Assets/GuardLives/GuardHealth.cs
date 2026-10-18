@@ -99,7 +99,12 @@ public class GuardHealth : MonoBehaviour
 
     void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        if (hit.collider.GetComponentInParent<SpikeDamage>() != null) Hit();
+        if (hit.collider.GetComponentInParent<SpikeDamage>() != null)
+        {
+            int before = Lives;
+            Hit();
+            if (Lives < before) GameAudio.TrampaCepo(hit.point);
+        }
     }
 
     void OnGUI()

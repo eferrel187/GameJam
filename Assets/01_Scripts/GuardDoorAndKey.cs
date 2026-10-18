@@ -204,6 +204,7 @@ public class GuardDoorAndKey : MonoBehaviour
                 hasKey = true;
                 keyObject.SetActive(false);
                 message = "¡Recogiste la llave!";
+                GameAudio.Llave();
                 messageUntil = Time.time + 2.5f;
             }
         }
@@ -240,6 +241,7 @@ public class GuardDoorAndKey : MonoBehaviour
                     nearest.open = true;
                     prompt = "";
                     if (nearest.arch != null) nearest.arch.Open();
+                    else GameAudio.Puerta(nearest.bounds.center);
 
                     // El paso queda libre al abrir.
                     foreach (Collider collider in nearest.colliders)

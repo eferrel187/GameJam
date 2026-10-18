@@ -143,6 +143,7 @@ public class KidnapSequence : MonoBehaviour
 
         // --- 2. Se abre la segunda puerta: oscuridad total.
         darkDoor.Open();
+        GameAudio.Terror();
         yield return new WaitForSeconds(darkDoor.openSeconds + darkPause);
 
         // --- 3. La mano sale de la oscuridad.
@@ -160,6 +161,7 @@ public class KidnapSequence : MonoBehaviour
             hand.SetPositionAndRotation(hidden, faceIn);
             SetCurl(-0.2f);
             hand.gameObject.SetActive(true);
+            GameAudio.ManoSale(hidden);
 
             // Avanza lento, como si tanteara, con los dedos abriéndose.
             for (float t = 0f; t < reachTime; t += Time.deltaTime)
@@ -184,12 +186,14 @@ public class KidnapSequence : MonoBehaviour
             }
             SetCurl(1f);
 
-            // Lo agarra (ya no bloquea el paso).
+            // Lo agarra (ya no bloquea el paso): golpe de garras contra la celda.
+            GameAudio.ManoAgarra(grabPoint);
             foreach (Collider c in target.GetComponentsInChildren<Collider>()) c.enabled = false;
             target.SetParent(palm != null ? palm : hand, true);
             yield return new WaitForSeconds(holdTime);
 
-            // Tirón hacia la oscuridad.
+            // Tirón hacia la oscuridad: la celda se arrastra por el suelo.
+            GameAudio.ManoArrastra(grabPoint);
             Vector3 start = hand.position;
             Quaternion startRot = hand.rotation;
             for (float t = 0f; t < retreatTime; t += Time.deltaTime)

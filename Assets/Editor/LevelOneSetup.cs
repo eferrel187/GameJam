@@ -162,6 +162,9 @@ public static class LevelOneSetup
         // ---------------- Tutorial con la nueva puerta
         TutorialSceneBuilder.Build();
 
+        // ---------------- Luces de antorchas y ambiente de calabozo
+        DungeonLightingSetup.Apply();
+
         report.Add("Puerta 2 en x=" + doorX.ToString("0.00"));
         System.IO.File.WriteAllLines("informe_nivel1.txt", report);
         Debug.Log("Nivel1 y Nivel2 preparados:\n" + string.Join("\n", report));

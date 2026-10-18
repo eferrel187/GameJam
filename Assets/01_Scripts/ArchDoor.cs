@@ -32,6 +32,7 @@ public class ArchDoor : MonoBehaviour
     {
         if (IsOpen) return;
         IsOpen = true;
+        GameAudio.Puerta(Center);
         StartCoroutine(OpenRoutine());
     }
 

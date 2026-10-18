@@ -1,0 +1,9 @@
+﻿{
+    "project":  "C:\\Users\\Erick\\OneDrive\\Documentos\\GAME\\GameJam",
+    "files":  [
+                  "Assets/01_Scripts/Levels/BreakableWall.cs",
+                  "Assets/01_Scripts/Levels/HazardCylinder.cs",
+                  "Assets/01_Scripts/Levels/LevelRules.cs"
+              ],
+    "note":  "Para deshacer, copia estos scripts a sus rutas originales con Unity cerrado."
+}

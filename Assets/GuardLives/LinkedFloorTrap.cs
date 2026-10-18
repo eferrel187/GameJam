@@ -18,7 +18,7 @@ public class LinkedFloorTrap : MonoBehaviour
             GameAudio.TrampaSuelo(sensor.transform.position);
             if (leftFloor) leftFloor.SetActive(false);
             if (rightFloor) rightFloor.SetActive(false);
-            Debug.Log("Trampa: tercera pasada, ambos pisos desaparecen.");
+            Debug.Log("Trampa: pasada " + (CompletedPasses + 1) + ", ambos pisos desaparecen.");
         }
     }
     public void Exit(FloorPassSensor sensor) { occupied.Remove(sensor); if (!collapsed && occupied.Count == 0) pendingExit = true; }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Secuencia de Nivel1:
+/// Secuencia de Nivel1 y Nivel2:
 ///  1. Con la primera puerta abierta, el jugador se acerca a la segunda.
 ///  2. Se le quita el control, la segunda puerta se abre y solo hay oscuridad.
 ///  3. Una mano sale de la oscuridad y se lleva "torture_device_01".
@@ -16,6 +16,7 @@ public class KidnapSequence : MonoBehaviour
     public ArchDoor firstDoor;
     public ArchDoor darkDoor;
     public string targetName = "torture_device_01";
+    public Transform targetOverride;
     public Transform hand;
 
     [Header("Activación")]
@@ -41,6 +42,7 @@ public class KidnapSequence : MonoBehaviour
     Transform player;
     Transform target;
     GuardPlayerMovement movement;
+    GuardHealth health;
     Camera cam;
     CameraIntroFollow follow;
 
@@ -53,11 +55,13 @@ public class KidnapSequence : MonoBehaviour
         GameObject p = GameObject.Find("Player");
         if (p) player = p.transform;
         if (player) movement = player.GetComponent<GuardPlayerMovement>();
+        if (player) health = player.GetComponent<GuardHealth>();
         cam = Camera.main;
         if (cam) follow = cam.GetComponent<CameraIntroFollow>();
 
         GameObject t = GameObject.Find(targetName);
-        if (t) target = t.transform;
+        if (targetOverride) target = targetOverride;
+        else if (t) target = t.transform;
         else Debug.LogWarning("KidnapSequence: no se encontró " + targetName);
 
         if (hand)
@@ -77,13 +81,14 @@ public class KidnapSequence : MonoBehaviour
 
     void Update()
     {
-        if (!player) return;
+        if (!player || GameState.Paused || (health && health.IsKnockedDown)) return;
 
         switch (phase)
         {
             case Phase.Waiting:
                 bool firstOpen = firstDoor == null || firstDoor.IsOpen;
-                if (firstOpen && darkDoor != null && movement != null && movement.enabled &&
+                if (firstOpen && darkDoor != null && movement != null && movement.enabled && cam && hand && target &&
+                    !GameState.HudHidden && !GameState.CinematicCamera &&
                     Flat(player.position - darkDoor.Center) < triggerDistance)
                 {
                     phase = Phase.Playing;
@@ -109,6 +114,13 @@ public class KidnapSequence : MonoBehaviour
     }
 
     static float Flat(Vector3 v) { v.y = 0f; return v.magnitude; }
+
+    // Tambien funciona si Start ya se ejecuto antes del montaje de LevelRules.
+    public void SetTarget(Transform value)
+    {
+        targetOverride = target = value;
+        if (value) targetName = value.name;
+    }
 
     IEnumerator Play()
     {

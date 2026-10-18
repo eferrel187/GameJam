@@ -10,7 +10,8 @@ using UnityEngine;
 ///    recorre todo el cuarto de punta a punta (hay que agacharse o esquivarlo).
 ///  - Hazard_Cylinder (3) y (4): rodillo del pasillo. Gira siempre; se mueve
 ///    cuando el jugador ya salió del cuarto con la llave y pisa el suelo del medio.
-///  - Suelo trampa -> suelo normal; púas y cepos fijos quitan vida.
+///  - Nivel2: los pisos activan el rodillo; Nivel3: caen al primer contacto.
+///  - Los cepos se cierran y quedan gastados tras quitar una vida.
 ///  - Puerta de salida: se abre al llegar (con la puerta de la llave abierta)
 ///    y al cruzarla se pasa al siguiente nivel.
 ///  - Al perder una vida, las trampas vuelven a su sitio.
@@ -33,6 +34,8 @@ public class LevelRules : MonoBehaviour
     bool wasInRoomWithKey, leftRoomWithKey;
 
     ArchDoor keyDoor, exitDoor;
+    KidnapSequence exitSequence;
+    LinkedFloorTrap firstPassFloor;
     bool leaving;
     string hint = "";
     float hintUntil;
@@ -62,18 +65,21 @@ public class LevelRules : MonoBehaviour
 
         List<GameObject> roots = gameObject.scene.GetRootGameObjects().ToList();
         GameObject Find(string n) => roots.FirstOrDefault(r => r.name == n && r.activeInHierarchy);
+        isLevel3 = roots.Any(r => r.name == "Llave_Falsa");
 
-        // Restos copiados del Nivel1 (secuestro sin puertas): la celda
-        // tapaba la salida y la secuencia no puede funcionar aquí.
+        // La copia de la secuencia se conecta en Nivel2; en Nivel3 se oculta.
         foreach (KidnapSequence k in FindObjectsByType<KidnapSequence>(FindObjectsSortMode.None))
             if (k.gameObject.scene == gameObject.scene && k.darkDoor == null)
             {
-                k.gameObject.SetActive(false);
-                GameObject cage = Find(k.targetName);
-                if (cage) cage.SetActive(false);
+                if (isLevel3)
+                {
+                    k.gameObject.SetActive(false);
+                    GameObject cage = Find(k.targetName);
+                    if (cage) cage.SetActive(false);
+                }
+                else k.enabled = false; // Se conecta a la salida al terminar el montaje.
             }
 
-        isLevel3 = roots.Any(r => r.name == "Llave_Falsa");
         pit = roots.FirstOrDefault(r => r.name.StartsWith("Spikes_Platform") && LevelSetup.BoundsOf(r).max.y < -1f);
         if (pit != null)
         {
@@ -94,6 +100,7 @@ public class LevelRules : MonoBehaviour
         if (isLevel3) CleanLevel3(roots);
 
         SolidTrapFloor(roots);
+        if (isLevel3) SetupFirstPassFloor(roots);
         StaticKillers(roots);
         SetupBreakableWall(roots);
         if (isLevel3) SetupFloorSpikes(roots);
@@ -175,6 +182,7 @@ public class LevelRules : MonoBehaviour
         {
             exitDoor = ed.GetComponent<ArchDoor>();
             BuildExit(ed);
+            if (!isLevel3) SetupKidnapExit(roots);
         }
     }
 
@@ -279,7 +287,10 @@ public class LevelRules : MonoBehaviour
             else if (wasInRoomWithKey || !hasRoom) leftRoomWithKey = true;
         }
 
-        // Puerta de salida: se abre al acercarse (con la primera ya abierta).
+        // La mano abre la salida de Nivel2 y controla el cruce a Nivel3.
+        if (exitSequence != null) return;
+
+        // Puerta de salida sin secuencia: se abre al acercarse.
         if (exitDoor != null && !exitDoor.IsOpen && (keyDoor == null || keyDoor.IsOpen))
         {
             Vector3 d = player.position - exitDoor.Center; d.y = 0f;
@@ -348,7 +359,8 @@ public class LevelRules : MonoBehaviour
         Vector3 mid = probe + axis * (a - b) * 0.5f;
         float floor = FloorBelow(mid);
         mid.y = floor + CrouchClearance + h.Radius;
-        h.FitLength(width - 0.12f, mid);
+        if (isLevel3) h.FitLength(width - 0.12f, mid);
+        else h.FitSegmentedLength(width - 0.12f, mid);
     }
 
     void RaiseForCrouch(List<HazardCylinder> list)
@@ -414,19 +426,76 @@ public class LevelRules : MonoBehaviour
     {
         if (breakableWall == null) return;
         Vector3 c = LevelSetup.Center(breakableWall);
-        GameObject Near(string n) => roots.FirstOrDefault(r => r.name == n && Vector3.Distance(LevelSetup.Center(r), c) < 1.5f);
 
         // El componente va en un objeto aparte (la pared se oculta al romperse).
         GameObject holder = new GameObject("ParedRompible");
         holder.transform.position = c;
         BreakableWall bw = holder.AddComponent<BreakableWall>();
         bw.intact = breakableWall;
-        // 1º se abre un boquete (Wall_Hole); 2º cae entera y queda el paso libre
-        // (Wall_Double_Broken deja un muro bajo que no se puede cruzar: no se usa).
-        bw.partial = Near("Wall_Hole") ?? Near("Wall_Double_Hole");
-        bw.broken = null;
-        bw.hideAlways = new[] { Near("Wall_Double_Hole"), Near("Wall_Double_Broken") }
-            .Where(g => g != null && g != bw.partial).ToArray();
+        // Mismas cinco fases en Nivel2 y Nivel3, sin avance automatico.
+        GameObject Phase(string n) => roots.FirstOrDefault(r => r.name == n);
+        bw.stages = new[] {
+            breakableWall, Phase("Wall_Double_Hole"), Phase("Wall_Hole"), Phase("Wall_Double_Broken")
+        };
+        bw.rubble = roots.Where(r => r.name.StartsWith("Bricks")
+            && Vector3.Distance(LevelSetup.Center(r), c) < 3.5f).ToArray();
+    }
+
+    void SetupKidnapExit(List<GameObject> roots)
+    {
+        GameObject cage = roots.FirstOrDefault(r => r.name == "torture_device_01");
+        KidnapSequence sequence = FindObjectsByType<KidnapSequence>(FindObjectsSortMode.None)
+            .FirstOrDefault(k => k.gameObject.scene == gameObject.scene && k.hand != null);
+        if (!cage || !exitDoor || !sequence)
+        {
+            Debug.LogWarning("Nivel2: falta la celda, la mano o la puerta de salida.");
+            return;
+        }
+        cage.SetActive(true);
+        LevelVisualAssets.EnsureCat(cage, -exitDoor.openTowards);
+        sequence.firstDoor = keyDoor;
+        sequence.darkDoor = exitDoor;
+        sequence.SetTarget(cage.transform);
+        Vector3 doorway = exitDoor.Center;
+        sequence.exitCenter = doorway + exitDoor.openTowards.normalized * 0.3f;
+        sequence.exitSize = new Vector3(3f, 20f, 0.5f);
+        sequence.enabled = true;
+        exitSequence = sequence;
+    }
+
+    void SetupFirstPassFloor(List<GameObject> roots)
+    {
+        GameObject left = roots.FirstOrDefault(r => r.name.StartsWith("trap floorIzq"));
+        GameObject right = roots.FirstOrDefault(r => r.name.StartsWith("trap floorDer"));
+        if (!left || !right || !pit)
+        {
+            Debug.LogWarning("Nivel3: faltan las dos mitades del piso o el foso de puas.");
+            return;
+        }
+        GameObject group = new GameObject("TrampaPisoPrimeraPasada_Nivel3");
+        firstPassFloor = group.AddComponent<LinkedFloorTrap>();
+        firstPassFloor.leftFloor = left;
+        firstPassFloor.rightFloor = right;
+        firstPassFloor.passesBeforeCollapse = 1;
+        Rigidbody body = group.AddComponent<Rigidbody>();
+        body.isKinematic = true;
+        body.useGravity = false;
+        foreach (GameObject floor in new[] { left, right })
+        {
+            Bounds b = LevelSetup.BoundsOf(floor);
+            GameObject sensor = new GameObject("Sensor_" + floor.name);
+            sensor.transform.SetParent(group.transform, false);
+            sensor.transform.position = new Vector3(b.center.x, b.max.y + 0.12f, b.center.z);
+            BoxCollider trigger = sensor.AddComponent<BoxCollider>();
+            trigger.isTrigger = true;
+            trigger.size = new Vector3(Mathf.Max(0.05f, b.size.x - 0.08f), 0.35f,
+                Mathf.Max(0.05f, b.size.z - 0.08f));
+            sensor.AddComponent<FloorPassSensor>().trap = firstPassFloor;
+        }
+        pit.SetActive(true);
+        KillZone damage = pit.GetComponent<KillZone>();
+        if (!damage) damage = pit.AddComponent<KillZone>();
+        damage.armed = true;
     }
 
     // ------------------------------------------------------------ foso y púas
@@ -451,8 +520,9 @@ public class LevelRules : MonoBehaviour
         openedFloors.Clear();
         if (pit != null)
         {
-            pit.SetActive(false);
             pit.transform.position = pitHome;
+            // El foso enlazado sigue preparado debajo de los dos pisos de Nivel3.
+            pit.SetActive(firstPassFloor != null);
         }
     }
 
@@ -481,17 +551,18 @@ public class LevelRules : MonoBehaviour
             if (b.min.y > 1.0f) r.SetActive(false);           // techo y paredes
         }
 
-        // Cepos: ninguno en el lado derecho (llave verdadera); en el izquierdo
-        // solo dos, los más alejados de la llave falsa.
-        GameObject fake = roots.FirstOrDefault(r => r.name == "Llave_Falsa");
-        List<GameObject> traps = roots.Where(r => r.name.StartsWith("BearTrap")).ToList();
-        foreach (GameObject t in traps.Where(t => LevelSetup.Center(t).x > 0f)) t.SetActive(false);
-        if (fake != null)
+        // Llave falsa (izquierda): las tres posiciones originales en zigzag.
+        // Llave real (derecha): solo el cepo del centro del pasillo.
+        List<GameObject> traps = roots.Where(r => r.name.StartsWith("BearTrap_Open")).ToList();
+        List<GameObject> left = traps.Where(t => LevelSetup.Center(t).x <= 0f)
+            .OrderByDescending(t => LevelSetup.Center(t).x).ToList();
+        List<GameObject> right = traps.Where(t => LevelSetup.Center(t).x > 0f).ToList();
+        foreach (GameObject trap in traps) trap.SetActive(false);
+        foreach (GameObject trap in left.Take(3)) trap.SetActive(true);
+        if (right.Count > 0)
         {
-            Vector3 k = LevelSetup.Center(fake);
-            foreach (GameObject t in traps.Where(t => LevelSetup.Center(t).x <= 0f)
-                         .OrderByDescending(t => Vector3.Distance(LevelSetup.Center(t), k)).Skip(2))
-                t.SetActive(false);
+            float centerZ = right.Average(t => LevelSetup.Center(t).z);
+            right.OrderBy(t => Mathf.Abs(LevelSetup.Center(t).z - centerZ)).First().SetActive(true);
         }
 
         // Copias exactas en el mismo sitio que (17): sobran.

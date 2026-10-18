@@ -1,0 +1,90 @@
+﻿{
+    "project":  "C:\\Users\\Erick\\OneDrive\\Documentos\\GAME\\GameJam",
+    "files":  [
+                  {
+                      "Relative":  "Assets/01_Scripts/KidnapSequence.cs",
+                      "Source":  "C:\\Users\\Erick\\Downloads\\AvanceNiveles23_Windows\\Archivos\\Assets\\01_Scripts\\KidnapSequence.cs",
+                      "Target":  "C:\\Users\\Erick\\OneDrive\\Documentos\\GAME\\GameJam\\Assets\\01_Scripts\\KidnapSequence.cs",
+                      "Expected":  "b42215c700251c96639c5d3fef586378331e0319c1b147f3ac4bc211eb5b4b4c",
+                      "Existed":  true
+                  },
+                  {
+                      "Relative":  "Assets/01_Scripts/Levels/BreakableWall.cs",
+                      "Source":  "C:\\Users\\Erick\\Downloads\\AvanceNiveles23_Windows\\Archivos\\Assets\\01_Scripts\\Levels\\BreakableWall.cs",
+                      "Target":  "C:\\Users\\Erick\\OneDrive\\Documentos\\GAME\\GameJam\\Assets\\01_Scripts\\Levels\\BreakableWall.cs",
+                      "Expected":  "1862aa272fd421c7aa7c5c72e698ddcec180a768315063fdd1d42dd78b486791",
+                      "Existed":  true
+                  },
+                  {
+                      "Relative":  "Assets/01_Scripts/Levels/KillZone.cs",
+                      "Source":  "C:\\Users\\Erick\\Downloads\\AvanceNiveles23_Windows\\Archivos\\Assets\\01_Scripts\\Levels\\KillZone.cs",
+                      "Target":  "C:\\Users\\Erick\\OneDrive\\Documentos\\GAME\\GameJam\\Assets\\01_Scripts\\Levels\\KillZone.cs",
+                      "Expected":  "3152e22d1cd27fc5845168adb9dce986e21bc70b0e8b8c5254746bdf2771ab31",
+                      "Existed":  true
+                  },
+                  {
+                      "Relative":  "Assets/01_Scripts/Levels/LevelRules.cs",
+                      "Source":  "C:\\Users\\Erick\\Downloads\\AvanceNiveles23_Windows\\Archivos\\Assets\\01_Scripts\\Levels\\LevelRules.cs",
+                      "Target":  "C:\\Users\\Erick\\OneDrive\\Documentos\\GAME\\GameJam\\Assets\\01_Scripts\\Levels\\LevelRules.cs",
+                      "Expected":  "532b1dcf138eb0e246ed40d1ddad380d75b5d8b68fe2997727e17151b090e27f",
+                      "Existed":  true
+                  },
+                  {
+                      "Relative":  "Assets/GuardLives/GuardHealth.cs",
+                      "Source":  "C:\\Users\\Erick\\Downloads\\AvanceNiveles23_Windows\\Archivos\\Assets\\GuardLives\\GuardHealth.cs",
+                      "Target":  "C:\\Users\\Erick\\OneDrive\\Documentos\\GAME\\GameJam\\Assets\\GuardLives\\GuardHealth.cs",
+                      "Expected":  "4fe395ef9b8c8ada44bbb02898c9919adf9c32e1f9811e1020fbefe0745470ac",
+                      "Existed":  true
+                  },
+                  {
+                      "Relative":  "Assets/GuardLives/LinkedFloorTrap.cs",
+                      "Source":  "C:\\Users\\Erick\\Downloads\\AvanceNiveles23_Windows\\Archivos\\Assets\\GuardLives\\LinkedFloorTrap.cs",
+                      "Target":  "C:\\Users\\Erick\\OneDrive\\Documentos\\GAME\\GameJam\\Assets\\GuardLives\\LinkedFloorTrap.cs",
+                      "Expected":  "0da8ca1d13d201622a3000d8d4e7902678b8ba1502d381be5ceb461ca7e5771c",
+                      "Existed":  true
+                  },
+                  {
+                      "Relative":  "Assets/01_Scripts/Levels/LevelVisualAssets.cs",
+                      "Source":  "C:\\Users\\Erick\\Downloads\\AvanceNiveles23_Windows\\Archivos\\Assets\\01_Scripts\\Levels\\LevelVisualAssets.cs",
+                      "Target":  "C:\\Users\\Erick\\OneDrive\\Documentos\\GAME\\GameJam\\Assets\\01_Scripts\\Levels\\LevelVisualAssets.cs",
+                      "Expected":  "887aee4bbc8d77ce190c30059a5c2aff0925e4bf90632ab93a0cc2d559faf149",
+                      "Existed":  false
+                  },
+                  {
+                      "Relative":  "Assets/01_Scripts/Levels/LevelVisualAssets.cs.meta",
+                      "Source":  "C:\\Users\\Erick\\Downloads\\AvanceNiveles23_Windows\\Archivos\\Assets\\01_Scripts\\Levels\\LevelVisualAssets.cs.meta",
+                      "Target":  "C:\\Users\\Erick\\OneDrive\\Documentos\\GAME\\GameJam\\Assets\\01_Scripts\\Levels\\LevelVisualAssets.cs.meta",
+                      "Expected":  "c0a2ad9beb0284e6635a1d514503c76497208c22890500eaeaae0210e68da624",
+                      "Existed":  false
+                  },
+                  {
+                      "Relative":  "Assets/Editor/LevelVisualAssetsSetup.cs",
+                      "Source":  "C:\\Users\\Erick\\Downloads\\AvanceNiveles23_Windows\\Archivos\\Assets\\Editor\\LevelVisualAssetsSetup.cs",
+                      "Target":  "C:\\Users\\Erick\\OneDrive\\Documentos\\GAME\\GameJam\\Assets\\Editor\\LevelVisualAssetsSetup.cs",
+                      "Expected":  "61ee3d1f5766a2f22d5cac7eb903c58ad8aafe941f28e3418c971d68579981f6",
+                      "Existed":  false
+                  },
+                  {
+                      "Relative":  "Assets/Editor/LevelVisualAssetsSetup.cs.meta",
+                      "Source":  "C:\\Users\\Erick\\Downloads\\AvanceNiveles23_Windows\\Archivos\\Assets\\Editor\\LevelVisualAssetsSetup.cs.meta",
+                      "Target":  "C:\\Users\\Erick\\OneDrive\\Documentos\\GAME\\GameJam\\Assets\\Editor\\LevelVisualAssetsSetup.cs.meta",
+                      "Expected":  "05aa656f8cc8abbbf21c36aef12dc2ded39f508b6ca8717fea27c8162be9af8b",
+                      "Existed":  false
+                  },
+                  {
+                      "Relative":  "Assets/Resources/LevelVisualAssets.asset",
+                      "Source":  "C:\\Users\\Erick\\Downloads\\AvanceNiveles23_Windows\\Archivos\\Assets\\Resources\\LevelVisualAssets.asset",
+                      "Target":  "C:\\Users\\Erick\\OneDrive\\Documentos\\GAME\\GameJam\\Assets\\Resources\\LevelVisualAssets.asset",
+                      "Expected":  "ddccf448907a45283e7c6d91a6c448dbdbcdb4350cde7066da0f5cc4ae19c11c",
+                      "Existed":  false
+                  },
+                  {
+                      "Relative":  "Assets/Resources/LevelVisualAssets.asset.meta",
+                      "Source":  "C:\\Users\\Erick\\Downloads\\AvanceNiveles23_Windows\\Archivos\\Assets\\Resources\\LevelVisualAssets.asset.meta",
+                      "Target":  "C:\\Users\\Erick\\OneDrive\\Documentos\\GAME\\GameJam\\Assets\\Resources\\LevelVisualAssets.asset.meta",
+                      "Expected":  "d71b4f77f25506ccfd49813a3e9a2f0e702aaa22a68b41b7e70a54e1a2189e39",
+                      "Existed":  false
+                  }
+              ],
+    "note":  "Los originales estan en las mismas rutas de Assets dentro de este respaldo."
+}

@@ -1,0 +1,13 @@
+﻿{
+    "project":  "C:\\Users\\Erick\\OneDrive\\Documentos\\GAME\\GameJam",
+    "files":  [
+                  {
+                      "Relative":  "Assets/01_Scripts/Levels/LevelRules.cs",
+                      "Source":  "C:\\Users\\Erick\\Downloads\\AvanceNiveles23_Windows\\Archivos\\Assets\\01_Scripts\\Levels\\LevelRules.cs",
+                      "Target":  "C:\\Users\\Erick\\OneDrive\\Documentos\\GAME\\GameJam\\Assets\\01_Scripts\\Levels\\LevelRules.cs",
+                      "Expected":  "b3d2ca7b644dd4f18ba7f92d3a049efa30c8fe721adcbd8ede08e503f32fe7ec",
+                      "Existed":  true
+                  }
+              ],
+    "note":  "Los originales estan en las mismas rutas de Assets dentro de este respaldo."
+}

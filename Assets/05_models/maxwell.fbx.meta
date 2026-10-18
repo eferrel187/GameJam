@@ -3,7 +3,27 @@ guid: 2d4a199be611ae34e81c6369bfaa6ee9
 ModelImporter:
   serializedVersion: 24501
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Dingus
+    second: {fileID: 2100000, guid: 6d006288b40be794ba773e7b412a770b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Whiskers
+    second: {fileID: 2100000, guid: 1e1a2e2ac4db3874f8e879e53163c726, type: 2}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Maxwell
+    second: {fileID: 2800000, guid: 4cb3bd442546bab4d9b5c17f12e54e4b, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: whiskers
+    second: {fileID: 2800000, guid: 407b79eb123da4543a9b52aabf1189d3, type: 3}
   materials:
     materialImportMode: 2
     materialName: 0

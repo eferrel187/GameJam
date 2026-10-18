@@ -30,6 +30,10 @@ public class HazardCylinder : MonoBehaviour
     int longest;
     float halfLength;
     float radius;
+    bool segmented;
+    Vector3 assemblyLocalCenter;
+
+    public int SegmentCount { get; private set; } = 1;
 
     Vector3 originPos;
     Vector3 originCenter;
@@ -42,7 +46,8 @@ public class HazardCylinder : MonoBehaviour
     GuardHealth health;
     AudioSource loop;
 
-    public Vector3 Center => shape != null ? shape.transform.TransformPoint(meshCenter) : transform.position;
+    public Vector3 Center => segmented ? transform.TransformPoint(assemblyLocalCenter)
+        : shape != null ? shape.transform.TransformPoint(meshCenter) : transform.position;
     public Vector3 Axis => axis;
     public float Radius => radius;
     public float HalfLength => halfLength;
@@ -58,6 +63,14 @@ public class HazardCylinder : MonoBehaviour
     /// Calcula eje, largo y radio a partir de la malla.
     public void MeasureShape()
     {
+        // El volumen peligroso debe cubrir todos los tramos, no solo el primero.
+        if (segmented)
+        {
+            originPos = transform.position;
+            originRot = transform.rotation;
+            originCenter = Center;
+            return;
+        }
         MeshFilter mf = GetComponentInChildren<MeshFilter>();
         if (mf == null || mf.sharedMesh == null) return;
         shape = mf;
@@ -86,6 +99,53 @@ public class HazardCylinder : MonoBehaviour
         Vector3 ls = shape.transform.localScale;
         ls[longest] *= length / (halfLength * 2f);
         shape.transform.localScale = ls;
+        transform.position += newCenter - Center;
+        MeasureShape();
+    }
+
+    /// Cubre el ancho repitiendo la malla original, sin alargar sus pinchos.
+    /// Los tramos comparten giro, movimiento, sonido y un solo volumen de daño.
+    public void FitSegmentedLength(float length, Vector3 newCenter)
+    {
+        if (segmented) { SetRestCenter(newCenter); return; }
+        if (!shape || !shape.sharedMesh || halfLength <= 0f || length <= 0f) return;
+        MeshRenderer source = shape.GetComponent<MeshRenderer>();
+        if (!source) { FitLength(length, newCenter); return; }
+
+        float nativeLength = halfLength * 2f;
+        // Se acortan ligeramente si hace falta; nunca se estira una pieza larga.
+        float overlap = length > nativeLength ? Mathf.Min(0.025f, nativeLength * 0.02f) : 0f;
+        SegmentCount = Mathf.Max(1, Mathf.CeilToInt((length - overlap) / (nativeLength - overlap)));
+        float partLength = (length + overlap * (SegmentCount - 1)) / SegmentCount;
+        float axialScale = partLength / nativeLength;
+        Bounds localBounds = shape.sharedMesh.bounds;
+        Vector3 originalCenter = Center;
+        assemblyLocalCenter = transform.InverseTransformPoint(originalCenter);
+
+        for (int i = 0; i < SegmentCount; i++)
+        {
+            GameObject part = new GameObject("TramoRodillo_" + (i + 1));
+            part.layer = shape.gameObject.layer;
+            part.transform.SetParent(shape.transform, false);
+            Vector3 scale = Vector3.one;
+            scale[longest] = axialScale;
+            part.transform.localScale = scale;
+            float along = -length * 0.5f + partLength * 0.5f + i * (partLength - overlap);
+            part.transform.localPosition = localBounds.center
+                + shape.transform.InverseTransformVector(axis * along)
+                - Vector3.Scale(localBounds.center, scale);
+            part.AddComponent<MeshFilter>().sharedMesh = shape.sharedMesh;
+            MeshRenderer renderer = part.AddComponent<MeshRenderer>();
+            renderer.sharedMaterials = source.sharedMaterials;
+            renderer.shadowCastingMode = source.shadowCastingMode;
+            renderer.receiveShadows = source.receiveShadows;
+            renderer.lightProbeUsage = source.lightProbeUsage;
+            renderer.reflectionProbeUsage = source.reflectionProbeUsage;
+        }
+
+        source.enabled = false;
+        segmented = true;
+        halfLength = length * 0.5f;
         transform.position += newCenter - Center;
         MeasureShape();
     }

@@ -36,7 +36,7 @@ public class GuardHealth : MonoBehaviour
 
     public void Hit()
     {
-        if (busy || Lives <= 0 || Time.time < nextHit) return;
+        if (busy || Lives <= 0 || Time.time < nextHit || GameState.Paused || GameState.CinematicCamera) return;
         Lives--;
         nextHit = Time.time + immunitySeconds + reviveDelaySeconds;
         StartCoroutine(Respawn());

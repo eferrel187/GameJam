@@ -49,6 +49,31 @@ public class KillZone : MonoBehaviour
 
         int before = health.Lives;
         health.Hit();
-        if (health.Lives < before) GameAudio.TrampaCepo(zone.center);
+        if (health.Lives < before)
+        {
+            GameAudio.TrampaCepo(zone.center);
+            if (bearTrap) CloseBearTrap();
+        }
+    }
+
+    void CloseBearTrap()
+    {
+        armed = false;
+        LevelVisualAssets assets = LevelVisualAssets.Load();
+        if (assets && assets.closedBearTrap)
+        {
+            GameObject closed = Instantiate(assets.closedBearTrap);
+            closed.name = "BearTrap_Closed_" + gameObject.name;
+            closed.transform.SetPositionAndRotation(transform.position, transform.rotation);
+            closed.transform.localScale = transform.lossyScale;
+            Bounds b = LevelVisualAssets.Measure(closed);
+            // Las dos mallas tienen pivotes distintos: alinea centro y base.
+            closed.transform.position += new Vector3(zone.center.x - b.center.x,
+                LevelVisualAssets.Measure(gameObject).min.y - b.min.y, zone.center.z - b.center.z);
+            foreach (Collider c in closed.GetComponentsInChildren<Collider>(true)) c.enabled = false;
+        }
+        else Debug.LogWarning("Falta BearTrap_Closed en LevelVisualAssets.", this);
+        foreach (Collider c in GetComponentsInChildren<Collider>(true)) c.enabled = false;
+        gameObject.SetActive(false);
     }
 }

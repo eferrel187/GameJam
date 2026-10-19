@@ -417,7 +417,11 @@ public static class StoryKit
             Physics.SyncTransforms();
             if (walkAnim) walkAnim.enabled = true;
             if (movement) movement.enabled = giveControl;
-            if (animator && animator.HasState(0, IdleState)) animator.CrossFade(IdleState, 0.15f);
+            if (animator)
+            {
+                animator.speed = 1f;
+                animator.Play(IdleState, 0, 0f);   // vuelve al estado normal (como al reaparecer)
+            }
         }
     }
 

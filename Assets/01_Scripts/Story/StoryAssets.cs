@@ -10,6 +10,9 @@ public class StoryAssets : ScriptableObject
     [Header("Jugador para niveles sin personaje")]
     public GameObject playerRig;
 
+    [Header("Animación de caminar (Walking.fbx) para los niveles 5 y 6")]
+    public AnimationClip walkingClip;
+
     [Header("Puertas estilo Nivel 2")]
     public GameObject doorLeft;
     public GameObject doorRight;

@@ -211,8 +211,12 @@ public class GuardPlayerMovement : MonoBehaviour
 
         input = Vector2.ClampMagnitude(input, 1f);
 
-        // Mordida de serpiente: controles invertidos un rato.
-        if (ControlsInverted) input = -input;
+        // Mordida de serpiente: controles invertidos un rato (y sin correr: camina aturdido).
+        if (ControlsInverted)
+        {
+            input = -input;
+            runHeld = false;
+        }
 
         // ---- Agacharse
         if (crouchHeld && !IsCrouching)

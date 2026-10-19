@@ -24,6 +24,7 @@ public static class StoryLevels
             case "Nivel6":
                 EnsurePlayer(scene, new Vector3(0f, 0f, 1.6f), 0f);
                 Add<Level6Rescue>(scene, "Historia_Nivel6");
+                Add<WalkingOverride>(scene, "Mordida_Walking");
                 break;
         }
     }
@@ -56,6 +57,16 @@ public static class StoryLevels
             GameObject inst = Object.Instantiate(rig, spawn, Quaternion.Euler(0f, yaw, 0f));
             inst.name = rig.name;
             SceneManager.MoveGameObjectToScene(inst, scene);
+
+            // GuardWalkAnimation lee los parámetros del Animator en Awake; en un
+            // prefab recién creado el Animator aún no estaba listo y se quedaba
+            // en reposo sin caminar. Se vuelve a crear ya con el Animator activo.
+            foreach (GuardWalkAnimation w in inst.GetComponentsInChildren<GuardWalkAnimation>(true))
+            {
+                GameObject owner = w.gameObject;
+                Object.DestroyImmediate(w);
+                owner.AddComponent<GuardWalkAnimation>();
+            }
         }
 
         // Solo una cámara: la del jugador.

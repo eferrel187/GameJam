@@ -59,6 +59,20 @@ public sealed class RisingSpikes : MonoBehaviour
         GameAudio.TrampaSuelo(footprint.center);
     }
 
+    /// Centro (en planta) de la trampa, para colocar señales encima.
+    public Vector3 FootprintCenter => footprint.center;
+    public Bounds Footprint => footprint;
+
+    /// Mueve la trampa a otro sitio (ya preparada).
+    public void Relocate(Vector3 delta)
+    {
+        if (!initialized) return;
+        raisedPosition += delta;
+        hiddenPosition += delta;
+        footprint.center += delta;
+        transform.position += delta;
+    }
+
     public void ResetTrap()
     {
         if (!initialized) return;
@@ -121,7 +135,7 @@ public sealed class RisingSpikes : MonoBehaviour
             if (danger.Intersects(controller.bounds) || crossed)
             {
                 int lives = health.Lives;
-                health.Hit();
+                health.HitBySpikes();
                 if (health.Lives < lives) GameAudio.TrampaCepo(danger.center);
             }
         }

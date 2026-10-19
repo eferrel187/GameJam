@@ -39,6 +39,12 @@ public class KidnapSequence : MonoBehaviour
     enum Phase { Waiting, Playing, Done, Leaving }
     Phase phase = Phase.Waiting;
 
+    /// La mano ya se llevó la jaula.
+    public bool Finished => phase == Phase.Done || phase == Phase.Leaving;
+
+    [Tooltip("Otra regla controla la salida por la puerta oscura (escena de salida).")]
+    public bool externalExit;
+
     Transform player;
     Transform target;
     GuardPlayerMovement movement;
@@ -97,6 +103,7 @@ public class KidnapSequence : MonoBehaviour
                 break;
 
             case Phase.Done:
+                if (externalExit) break;
                 // Cruza el plano de la puerta (a cualquier altura) -> Nivel 2.
                 Vector3 into = darkDoor.openTowards.normalized;
                 Vector3 rel = player.position - exitCenter;

@@ -17,7 +17,14 @@ public class GuardHealth : MonoBehaviour
     /// Cuántas veces ha muerto en este nivel.
     public int Deaths => maxLives - Lives;
 
+    /// Se pierde una vida (antes de la animación de caída).
+    public static event System.Action<GuardHealth> Damaged;
+    /// El jugador ya está otra vez en el punto de inicio: los niveles
+    /// restablecen sus trampas, llaves y acertijos.
+    public static event System.Action<GuardHealth> Respawned;
+
     Vector3 spawn; Quaternion facing; float nextHit; bool busy;
+    float shieldUntil;
     Texture2D heart;
     Animator animator;
 
@@ -34,12 +41,40 @@ public class GuardHealth : MonoBehaviour
         animator = GetComponentInChildren<Animator>();
     }
 
+    /// Un rato sin poder recibir daño (al reaparecer o al recuperar el control).
+    public void Shield(float seconds)
+    {
+        shieldUntil = Mathf.Max(shieldUntil, Time.time + seconds);
+    }
+
+    /// Nadie puede hacer daño durante textos, transiciones, escenas o pausas.
+    public bool CanBeHurt =>
+        !busy && Lives > 0 && Time.time >= nextHit && Time.time >= shieldUntil &&
+        !GameState.Paused && !GameState.CinematicCamera && !GameState.Narrating && !GameState.Transition;
+
     public void Hit()
     {
-        if (busy || Lives <= 0 || Time.time < nextHit || GameState.Paused || GameState.CinematicCamera) return;
+        if (!CanBeHurt) return;
         Lives--;
         nextHit = Time.time + immunitySeconds + reviveDelaySeconds;
+        Damaged?.Invoke(this);
         StartCoroutine(Respawn());
+    }
+
+    /// Muerte por púas: además deja una calavera donde cayó.
+    public void HitBySpikes()
+    {
+        int before = Lives;
+        Hit();
+        if (Lives < before) StoryKit.SkullAt(transform.position);
+    }
+
+    /// Derrota forzada por una secuencia (p. ej. se acabó el tiempo).
+    public void ForceHit()
+    {
+        nextHit = 0f;
+        shieldUntil = 0f;
+        Hit();
     }
 
     IEnumerator Respawn()
@@ -49,7 +84,11 @@ public class GuardHealth : MonoBehaviour
         // Conserva si la intro de la cámara ya había dado el control.
         var movement = GetComponent<GuardPlayerMovement>();
         bool wasEnabled = movement != null && movement.enabled;
-        if (movement != null) movement.enabled = false;
+        if (movement != null)
+        {
+            movement.RestoreControls();
+            movement.enabled = false;
+        }
 
         // Animación: cae al suelo (o muere si no quedan vidas).
         bool dead = Lives <= 0;
@@ -83,7 +122,15 @@ public class GuardHealth : MonoBehaviour
             animator.Play("Idle", 0, 0f);
         }
 
+        // Cada nivel restablece sus trampas, llaves y acertijos.
+        Respawned?.Invoke(this);
+
         yield return null;
+
+        // Vuelve a mostrar el contexto del nivel antes de devolver el control.
+        yield return StoryNarrator.AfterDeath();
+
+        Shield(1.2f);
         if (movement != null) movement.enabled = wasEnabled;
         busy = false;
     }
@@ -106,7 +153,7 @@ public class GuardHealth : MonoBehaviour
         if (hit.collider.GetComponentInParent<SpikeDamage>() != null)
         {
             int before = Lives;
-            Hit();
+            HitBySpikes();
             if (Lives < before) GameAudio.TrampaCepo(hit.point);
         }
     }

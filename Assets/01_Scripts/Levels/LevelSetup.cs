@@ -20,6 +20,9 @@ public static class LevelSetup
 
     public static void Install(Scene scene)
     {
+        // Historia: personaje en los niveles 5 y 6 y reglas de los niveles 4, 5 y 6.
+        StoryLevels.Install(scene);
+
         List<GameObject> roots = scene.GetRootGameObjects().ToList();
         GameObject breakable = FindBreakableWall(roots);
 

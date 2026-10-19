@@ -55,6 +55,23 @@ public class GuardPlayerMovement : MonoBehaviour
     /// Aumenta en 1 cada vez que el jugador salta.
     public int JumpCount { get; private set; }
 
+    /// Controles invertidos (mordida de serpiente) hasta este momento.
+    private float invertedUntil;
+    public bool ControlsInverted => Time.time < invertedUntil;
+    public float InvertedRemaining => Mathf.Max(0f, invertedUntil - Time.time);
+
+    /// Invierte los controles; una nueva mordida renueva la duración (no se acumula).
+    public void InvertControls(float seconds)
+    {
+        invertedUntil = Time.time + seconds;
+    }
+
+    /// Controles normales otra vez (al terminar, al morir, en la victoria).
+    public void RestoreControls()
+    {
+        invertedUntil = 0f;
+    }
+
     public event System.Action Jumped;
     public event System.Action Landed;
 
@@ -193,6 +210,9 @@ public class GuardPlayerMovement : MonoBehaviour
         }
 
         input = Vector2.ClampMagnitude(input, 1f);
+
+        // Mordida de serpiente: controles invertidos un rato.
+        if (ControlsInverted) input = -input;
 
         // ---- Agacharse
         if (crouchHeld && !IsCrouching)

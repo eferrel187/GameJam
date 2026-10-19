@@ -48,7 +48,8 @@ public class KillZone : MonoBehaviour
         if (!controller.bounds.Intersects(zone)) return;
 
         int before = health.Lives;
-        health.Hit();
+        if (bearTrap) health.Hit();
+        else health.HitBySpikes();
         if (health.Lives < before)
         {
             GameAudio.TrampaCepo(zone.center);

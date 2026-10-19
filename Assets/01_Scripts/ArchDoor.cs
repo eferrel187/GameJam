@@ -36,6 +36,57 @@ public class ArchDoor : MonoBehaviour
         StartCoroutine(OpenRoutine());
     }
 
+    Leaf openedL, openedR;
+    float openedAngle;
+
+    /// Cierra la puerta (con el mismo giro, al revés) y vuelve a bloquear el paso.
+    public void Close(float seconds = 0.9f)
+    {
+        if (!IsOpen) return;
+        StopAllCoroutines();
+        StartCoroutine(CloseRoutine(seconds));
+    }
+
+    /// Vuelve a dejarla cerrada al instante (al reiniciar el nivel).
+    public void ResetClosed()
+    {
+        StopAllCoroutines();
+        if (openedL != null) openedL.Rotate(-openedAngle);
+        if (openedR != null) openedR.Rotate(-openedAngle);
+        openedAngle = 0f;
+        IsOpen = IsMoving = false;
+        SetLeafColliders(true);
+    }
+
+    IEnumerator CloseRoutine(float seconds)
+    {
+        IsMoving = true;
+        float start = openedAngle;
+        float done = 0f;
+        for (float t = 0f; t < seconds; t += Time.deltaTime)
+        {
+            float target = start * Mathf.SmoothStep(0f, 1f, t / seconds);
+            float step = target - done;
+            openedL?.Rotate(-step);
+            openedR?.Rotate(-step);
+            done = target;
+            yield return null;
+        }
+        openedL?.Rotate(-(start - done));
+        openedR?.Rotate(-(start - done));
+        openedAngle = 0f;
+        SetLeafColliders(true);
+        IsOpen = IsMoving = false;
+    }
+
+    void SetLeafColliders(bool on)
+    {
+        foreach (Collider c in GetComponentsInChildren<Collider>(true))
+            if ((leftLeaf && c.transform.IsChildOf(leftLeaf)) || (rightLeaf && c.transform.IsChildOf(rightLeaf)) ||
+                c.name.StartsWith("Colision_Hoja"))
+                c.enabled = on;
+    }
+
     IEnumerator OpenRoutine()
     {
         IsMoving = true;
@@ -49,6 +100,7 @@ public class ArchDoor : MonoBehaviour
         Bounds all = LeafBounds();
         Leaf l = new Leaf(leftLeaf, all, openTowards);
         Leaf r = new Leaf(rightLeaf, all, openTowards);
+        openedL = l; openedR = r; openedAngle = 0f;
 
         float done = 0f;
         for (float t = 0f; t < openSeconds; t += Time.deltaTime)
@@ -60,10 +112,12 @@ public class ArchDoor : MonoBehaviour
             l.Rotate(step);
             r.Rotate(step);
             done = target;
+            openedAngle = done;
             yield return null;
         }
         l.Rotate(openAngle - done);
         r.Rotate(openAngle - done);
+        openedAngle = openAngle;
 
         IsMoving = false;
     }

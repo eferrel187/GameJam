@@ -5,10 +5,10 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 public static class SceneDump
 {
-    [MenuItem("Juego/Diagnóstico/Volcar Nivel2 y Nivel3")]
+    [MenuItem("Juego/Diagnóstico/Volcar niveles nuevos")]
     public static void Run()
     {
-        foreach (string sc in new[] { "Nivel2", "Nivel3" })
+        foreach (string sc in new[] { "Nivel4", "Nivel6", "Nivel7" })
         {
             var o = new List<string>();
             string path = "Assets/00_Scenes/" + sc + ".unity";

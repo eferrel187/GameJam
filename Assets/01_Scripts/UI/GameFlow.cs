@@ -28,6 +28,15 @@ public static class GameState
     /// Vidas con las que se entra al siguiente nivel (-1 = completas).
     /// El Nivel1 (y el tutorial) siempre empiezan con todas.
     public static int CarriedLives = -1;
+
+    /// Hay un texto de la historia en pantalla (el tiempo está congelado).
+    public static bool Narrating;
+
+    /// Cambiando de escena (fundido): nada hace daño.
+    public static bool Transition;
+
+    /// La introducción de la historia ya se mostró en esta partida.
+    public static bool IntroSeen;
 }
 
 /// <summary>
@@ -46,6 +55,9 @@ static class GameBootstrap
         GameState.Paused = false;
         GameState.CinematicCamera = false;
         GameState.CarriedLives = -1;
+        GameState.Narrating = false;
+        GameState.Transition = false;
+        GameState.IntroSeen = false;
         Time.timeScale = 1f;
 
         SceneManager.sceneLoaded -= OnSceneLoaded;
@@ -56,10 +68,15 @@ static class GameBootstrap
     {
         // Primero las reglas del nivel (agrupan puertas, colisiones...)
         // para que los demás sistemas ya las encuentren.
+        GameState.Transition = false;
+        GameState.Narrating = false;
+        Time.timeScale = 1f;
         LevelSetup.Install(scene);
         GameFlow.Install();
         GuardDoorAndKey.Install();
         GuardCameraCollision.Install();
+        // Textos de la historia (contexto de cada nivel, pistas, epílogo).
+        StoryNarrator.Install(scene);
     }
 }
 
@@ -122,6 +139,9 @@ public class GameFlow : MonoBehaviour
     /// Carga la siguiente escena del Build (o vuelve al menú si no hay más).
     public static void LoadNextScene()
     {
+        // Evita cargar dos veces (p. ej. una escena de salida y un detector de puerta).
+        if (GameState.Transition) return;
+
         // Las vidas pasan al siguiente nivel (desde el tutorial, completas).
         GuardHealth h = FindFirstObjectByType<GuardHealth>();
         string current = SceneManager.GetActiveScene().name;
@@ -139,6 +159,40 @@ public class GameFlow : MonoBehaviour
             instance.StartCoroutine(instance.FadeAndLoad(next));
         else
             SceneManager.LoadScene(next);
+    }
+
+    /// Oculta al instante el mensaje de muerte (lo tapa el texto de la historia).
+    public static void HideDeathPanel()
+    {
+        if (instance == null || instance.deathGroup == null) return;
+        instance.deathGroup.alpha = 0f;
+    }
+
+    /// "Jugar de nuevo": la aventura empieza otra vez desde el Nivel 1,
+    /// con todas las vidas y la introducción.
+    public static void RestartAdventure()
+    {
+        GameState.CarriedLives = -1;
+        GameState.IntroSeen = false;
+        GameState.MenuShownThisSession = true;
+        int level1 = SceneUtility.GetBuildIndexByScenePath("Assets/00_Scenes/Nivel1.unity");
+        LoadIndex(level1 >= 0 ? level1 : 1);
+    }
+
+    /// "Volver al menú".
+    public static void GoToMenu()
+    {
+        GameState.CarriedLives = -1;
+        GameState.IntroSeen = false;
+        GameState.MenuShownThisSession = false;
+        LoadIndex(0);
+    }
+
+    static void LoadIndex(int index)
+    {
+        if (GameState.Transition) return;
+        if (instance != null) instance.StartCoroutine(instance.FadeAndLoad(index));
+        else SceneManager.LoadScene(index);
     }
 
     // ---------------------------------------------------------------- ciclo
@@ -203,7 +257,8 @@ public class GameFlow : MonoBehaviour
                 {
                     ShowDeath();
                 }
-                else if (kb.escapeKey.wasPressedThisFrame)
+                else if (kb.escapeKey.wasPressedThisFrame && !GameState.Narrating &&
+                         !GameState.CinematicCamera)
                 {
                     Pause();
                 }
@@ -282,6 +337,9 @@ public class GameFlow : MonoBehaviour
     IEnumerator FadeAndLoad(int buildIndex)
     {
         SetState(State.Loading);
+        // Durante la transición nada se mueve ni hace daño.
+        GameState.Transition = true;
+        Time.timeScale = 0f;
         Show(fadeGroup, true);
         yield return Fade(fadeGroup, 0f, 1f, .6f);
 

@@ -33,6 +33,7 @@ public static class PlayerAnimationSetup
         { "Crouch_Idle", true },       // se usan automáticamente
         { "Crouched_Walking", true },
         { "Walk_Forward_Arc", true },  // se usa para agacharse
+        { "Walking", true },           // caminar de las escenas (puertas, epílogo)
     };
 
     [MenuItem("Juego/Configurar animaciones del jugador")]
@@ -58,12 +59,14 @@ public static class PlayerAnimationSetup
         AnimatorStateMachine sm = controller.layers[0].stateMachine;
 
         // Clip de caminar que ya tenía el controlador.
-        AnimationClip walk = sm.states
-            .Select(s => s.state.motion as AnimationClip)
-            .FirstOrDefault(c => c != null && c.name.ToLower().Contains("walk"));
+        // (Primero el clip original: los de agacharse o de las escenas también dicen "walk".)
+        AnimationClip walk = AssetDatabase.LoadAssetAtPath<AnimationClip>(Folder + "/walk.com.anim");
 
         if (walk == null)
-            walk = AssetDatabase.LoadAssetAtPath<AnimationClip>(Folder + "/walk.com.anim");
+            walk = sm.states
+                .Select(s => s.state.motion as AnimationClip)
+                .FirstOrDefault(c => c != null && c.name.ToLower().Contains("walk") &&
+                                     c.name != "Walking" && c.name != "Walk_Forward_Arc" && c.name != "Crouched_Walking");
 
         if (walk == null)
         {
@@ -144,6 +147,13 @@ public static class PlayerAnimationSetup
 
         AnimatorState move = sm.AddState("Movimiento", new Vector3(300, 120, 0));
         move.motion = moveTree;
+
+        // Caminar de las escenas (Walking.fbx): se activa por código con CrossFade.
+        if (clips.TryGetValue("Walking", out AnimationClip sceneWalk))
+        {
+            AnimatorState sceneState = sm.AddState("Caminar_Escena", new Vector3(600, -120, 0));
+            sceneState.motion = sceneWalk;
+        }
 
         Transition(idle, move, 0.2f).AddCondition(
             AnimatorConditionMode.Greater, 0.05f, "Speed");

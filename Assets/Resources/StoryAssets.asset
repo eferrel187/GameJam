@@ -1,0 +1,63 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dfc77cfbf9b384defb193591388f4b6b, type: 3}
+  m_Name: StoryAssets
+  m_EditorClassIdentifier: Assembly-CSharp::StoryAssets
+  playerRig: {fileID: 5108365917137468006, guid: 1276378a62b0b4c58ae3fcab6400d13c, type: 3}
+  doorLeft: {fileID: 8757297263572073216, guid: 6e865226570205f4eaead23af9fc207b, type: 3}
+  doorRight: {fileID: 8669083477937478409, guid: fe0226a5adcf92d40a599a0b2b852880, type: 3}
+  doorFrame: {fileID: 2510312644705300734, guid: ec692e77d96b216499f43d3f5c7c932a, type: 3}
+  skull: {fileID: 5241549655451238576, guid: fbf918ab74bb78c4bb738d331674b1b5, type: 3}
+  brokenPots:
+  - {fileID: 8712104593634024486, guid: 5e6e8eaefe482a04a9aebcc28e995879, type: 3}
+  - {fileID: 4779892836747072054, guid: 1c9d06a583768b64da927e34026c2d29, type: 3}
+  - {fileID: 5497848542375865155, guid: 07cde1d69d9aea7478da8185bbe73a94, type: 3}
+  bookcaseFull: {fileID: 397968511246135293, guid: 29feea1b8a214344b84aab37804d90b9, type: 3}
+  bookcaseEmpty: {fileID: 1906584325650972321, guid: 159edf945d4e4b5458cd0bc60d803bf4, type: 3}
+  key: {fileID: 919132149155446097, guid: 011654c8a85066e4aa38ccac9f0128a6, type: 3}
+  monsterHand: {fileID: 3711644325706237975, guid: 673b8f7c9e1c344c1830ad4f99075a7a, type: 3}
+  hazardCylinder: {fileID: 919132149155446097, guid: 0ed04d0fd388e02478d70c72d5f4d901, type: 3}
+  spikesPlatform: {fileID: 919132149155446097, guid: 65ce65690835e5445bf89ce3a2afa4ad, type: 3}
+  trees:
+  - {fileID: 383548422292001922, guid: 81cc3e3478017ef46ad98b71e468c499, type: 3}
+  - {fileID: 4322183896017243816, guid: 6ec55fff2d066fc4b80bd08763a1e625, type: 3}
+  - {fileID: 8093451304792389188, guid: 4b87ea11bc5d2614ebc4b3efba968cc6, type: 3}
+  bushes:
+  - {fileID: 4263332844994750609, guid: a925e5fdd75fe8a4b81514346392cd1b, type: 3}
+  - {fileID: 7444857390627611521, guid: 5cf8ca4f2343f4e4eba53ad3ab003013, type: 3}
+  - {fileID: 3277813382181638328, guid: 120f609e82a13d048a8ccd7960d54494, type: 3}
+  - {fileID: 5403533266581252676, guid: 29ebb943888ac04468414d2b0513265c, type: 3}
+  grass: {fileID: 3207515916150879382, guid: 29653044779561649a8062030cce415c, type: 3}
+  candles: {fileID: 30388983271492098, guid: 5e060587786274d4490dd87f1ee1c755, type: 3}
+  wood: {fileID: 2100000, guid: a6e0dd651e69c9c498f904d051f015bf, type: 2}
+  darkWood: {fileID: 2100000, guid: df24f17de9d43f046bdfa01d682f9315, type: 2}
+  darkness: {fileID: 2100000, guid: 2918b69fd94fa4b298d2c390b3452354, type: 2}
+  maullido: {fileID: 8300000, guid: f670b8525134b43328d2ec796a1d7d69, type: 3}
+  maullidoSuave: {fileID: 8300000, guid: 635bd42fe650844999278d608f5dece0, type: 3}
+  maullidoAsustado: {fileID: 8300000, guid: be907a57e4c8b4d5f84f03379b10cd45, type: 3}
+  ronroneo: {fileID: 8300000, guid: af921c1bb7b2d4cae9bc41a99866c123, type: 3}
+  musicaBaile: {fileID: 8300000, guid: cbff24a05e6f3402295fbff6f1466410, type: 3}
+  ambienteCampo: {fileID: 8300000, guid: dc0e7c7a72f1344adb6e02d0e3123c0f, type: 3}
+  musicaTranquila: {fileID: 8300000, guid: 89068580b79c84aed96249de9a0c1e2d, type: 3}
+  latido: {fileID: 8300000, guid: 47d2d6b324d0a42da8bbace8a8da4637, type: 3}
+  zumbidoMano: {fileID: 8300000, guid: bb220a22c8e17451789f4692b35cfa22, type: 3}
+  estatuaGira: {fileID: 8300000, guid: 4a5f56c5a79064791be4738b2b961465, type: 3}
+  acierto: {fileID: 8300000, guid: b0abb36d19f6840fd83b27cb97ce66be, type: 3}
+  papel: {fileID: 8300000, guid: 1495fbdb9caa4445f82575641c048ce2, type: 3}
+  crujido: {fileID: 8300000, guid: 8c1dba3fed16e47a7aa44d2f9590bc45, type: 3}
+  rotor: {fileID: 8300000, guid: a0e2e54d682244865ad5d3840c040c9a, type: 3}
+  jaulaRompe: {fileID: 8300000, guid: 548a6985922bd447f8e32bd4a01a8d65, type: 3}
+  serpienteSiseo: {fileID: 8300000, guid: 771cf8c72567b42acbe59ac2179e3bd0, type: 3}
+  serpienteMordida: {fileID: 8300000, guid: 7fdc27d1bb9644b3093366725ce82d75, type: 3}
+  tic: {fileID: 8300000, guid: ce5d15d1c30a148e1bdf771c37a3766f, type: 3}
+  libros: {fileID: 8300000, guid: e1c2fe31550e04685870a8505f38d114, type: 3}
+  golpePuerta: {fileID: 8300000, guid: ab7802a2ac5794491be55663c8d47070, type: 3}

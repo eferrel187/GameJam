@@ -499,7 +499,7 @@ public static class StoryKit
         Vector3 floorC = new Vector3(doorC.x, pp.player.position.y, doorC.z);
         Vector3 front = floorC - into * 1.3f;
 
-        yield return MoveCamera(cam, floorC - into * 4.6f + side * 2.0f + Vector3.up * 2.1f,
+        yield return MoveCamera(cam, floorC - into * 4.2f + side * 0.9f + Vector3.up * 2.0f,
             floorC + Vector3.up * 1.1f, 0.8f);
         yield return pp.WalkTo(front, 1.45f);
         yield return pp.TurnTo(into);

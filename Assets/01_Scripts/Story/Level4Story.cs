@@ -24,8 +24,30 @@ public class Level4Story : MonoBehaviour
     void Awake()
     {
         rules = FindFirstObjectByType<Level4Rules>();
-        if (!rules) { enabled = false; return; }
+        if (!rules) { Debug.LogWarning("Nivel4 historia: no hay Level4Rules."); enabled = false; return; }
         SwapKeys();
+        UseRoundArchDoor();
+    }
+
+    /// La puerta con llave usa las hojas dobles estilo Nivel 2 que hay en la
+    /// escena (antes tapaban la hoja gótica y no dejaban pasar).
+    void UseRoundArchDoor()
+    {
+        GameObject l = null, r = null;
+        foreach (GameObject root in gameObject.scene.GetRootGameObjects())
+        {
+            if (root.name == "Doors_RoundArch_L (1)") l = root;
+            if (root.name == "Doors_RoundArch_R (1)") r = root;
+        }
+        ArchDoor door = rules.exitDoor;
+        if (!l || !r || !door) return;
+        if (door.leftLeaf && door.leftLeaf.gameObject != l) door.leftLeaf.gameObject.SetActive(false);
+        if (door.rightLeaf && door.rightLeaf.gameObject != r) door.rightLeaf.gameObject.SetActive(false);
+        l.transform.SetParent(door.transform, true);
+        r.transform.SetParent(door.transform, true);
+        door.leftLeaf = l.transform;
+        door.rightLeaf = r.transform;
+        door.openTowards = Vector3.forward;
     }
 
     /// Celdas del este vistas de frente (mirando al este): la izquierda es la del norte (z mayor).
@@ -90,6 +112,8 @@ public class Level4Story : MonoBehaviour
         if (rules.catSequence) rules.catSequence.externalExit = true;
 
         GuardHealth.Respawned += OnRespawn;
+        Debug.Log("Nivel4 historia: " + v + " señales de trampa, " + wallTraps.Count + " trampas de muro, llave falsa en z=" +
+                  (rules.fakeKey ? rules.fakeKey.transform.position.z.ToString("0.0") : "?"));
     }
 
     void OnDestroy() { GuardHealth.Respawned -= OnRespawn; }
@@ -101,6 +125,26 @@ public class Level4Story : MonoBehaviour
 
     void Update()
     {
+#if UNITY_EDITOR
+        // Pruebas en el editor: 1 celda izquierda (falsa), 2 celda derecha (verdadera),
+        // 3 pasillo de las púas del muro, 4 delante de la puerta con llave.
+        var kb = UnityEngine.InputSystem.Keyboard.current;
+        if (kb != null && player && movement && movement.enabled && !GameState.Narrating)
+        {
+            Vector3? to = kb.digit1Key.wasPressedThisFrame ? new Vector3(19.2f, 0.05f, 16.2f)
+                        : kb.digit2Key.wasPressedThisFrame ? new Vector3(19.2f, 0.05f, 10f)
+                        : kb.digit3Key.wasPressedThisFrame ? new Vector3(17f, 0.05f, 19.3f)
+                        : kb.digit4Key.wasPressedThisFrame ? new Vector3(0f, 0.05f, 34.5f) : (Vector3?)null;
+            if (to.HasValue)
+            {
+                CharacterController cc = player.GetComponent<CharacterController>();
+                cc.enabled = false;
+                player.position = to.Value;
+                cc.enabled = true;
+                Physics.SyncTransforms();
+            }
+        }
+#endif
         if (exiting || !rules || !player || !rules.catSequence) return;
         if (!rules.catSequence.Finished || GameState.CinematicCamera || GameState.Narrating) return;
         if (movement && !movement.enabled) return;

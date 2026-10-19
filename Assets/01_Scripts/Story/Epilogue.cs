@@ -289,7 +289,7 @@ public class Epilogue : MonoBehaviour
         RenderSettings.fog = true;
         RenderSettings.fogMode = FogMode.Exponential;
         RenderSettings.fogColor = dawn;
-        RenderSettings.fogDensity = 0.016f;
+        RenderSettings.fogDensity = 0.011f;
 
         GameObject sun = new GameObject("Sol_Amanecer");
         sun.transform.SetParent(root, false);

@@ -596,7 +596,7 @@ public class Level6Rescue : MonoBehaviour
         GameObject spot = new GameObject("Luz_Baile");
         spot.transform.position = cc + Vector3.up * 1.6f + Vector3.back * 0.6f;
         Light sl = spot.AddComponent<Light>();
-        sl.type = LightType.Point; sl.color = new Color(1f, .85f, .6f); sl.range = 4f; sl.intensity = 2.2f;
+        sl.type = LightType.Point; sl.color = new Color(1f, .85f, .6f); sl.range = 5f; sl.intensity = 4f;
         spot.transform.SetParent(cat.transform, true);
         AudioSource music = StoryKit.Loop(a.musicaBaile, null, 0.75f);
         yield return CatDance(cam, 9.6f);

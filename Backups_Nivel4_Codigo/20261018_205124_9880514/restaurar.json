@@ -1,0 +1,19 @@
+﻿{
+    "project":  "C:\\Users\\Erick\\OneDrive\\Documentos\\GAME\\GameJam",
+    "files":  [
+                  {
+                      "Relative":  "Assets/Editor/AutoPrepareLevelFour.cs",
+                      "Source":  "C:\\Users\\Erick\\Downloads\\Nivel4_Windows\\Archivos\\Assets\\Editor\\AutoPrepareLevelFour.cs",
+                      "Target":  "C:\\Users\\Erick\\OneDrive\\Documentos\\GAME\\GameJam\\Assets\\Editor\\AutoPrepareLevelFour.cs",
+                      "Existed":  true,
+                      "Expected":  "9ba8ce3d13eafc8644e498b06b71f0ae01c252f1a411e803df62bfa8efe47175"
+                  },
+                  {
+                      "Relative":  "Assets/Editor/LevelFourSetup.cs",
+                      "Source":  "C:\\Users\\Erick\\Downloads\\Nivel4_Windows\\Archivos\\Assets\\Editor\\LevelFourSetup.cs",
+                      "Target":  "C:\\Users\\Erick\\OneDrive\\Documentos\\GAME\\GameJam\\Assets\\Editor\\LevelFourSetup.cs",
+                      "Existed":  true,
+                      "Expected":  "3c4e8db3b0566f4d9501171517c5912f8b3dbde7147fbce89b15eda9ecdc1384"
+                  }
+              ]
+}

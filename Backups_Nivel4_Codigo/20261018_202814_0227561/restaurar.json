@@ -1,0 +1,33 @@
+﻿{
+    "project":  "C:\\Users\\Erick\\OneDrive\\Documentos\\GAME\\GameJam",
+    "files":  [
+                  {
+                      "Relative":  "Assets/01_Scripts/GuardDoorAndKey.cs",
+                      "Source":  "C:\\Users\\Erick\\Downloads\\Nivel4_Windows\\Archivos\\Assets\\01_Scripts\\GuardDoorAndKey.cs",
+                      "Target":  "C:\\Users\\Erick\\OneDrive\\Documentos\\GAME\\GameJam\\Assets\\01_Scripts\\GuardDoorAndKey.cs",
+                      "Existed":  true,
+                      "Expected":  "511292f6ee10bd7db4ddcb2b0c9dea8eb15878e8e03bbe9a0b62d2b36475c6f6"
+                  },
+                  {
+                      "Relative":  "Assets/Editor/AutoPrepareLevelFour.cs",
+                      "Source":  "C:\\Users\\Erick\\Downloads\\Nivel4_Windows\\Archivos\\Assets\\Editor\\AutoPrepareLevelFour.cs",
+                      "Target":  "C:\\Users\\Erick\\OneDrive\\Documentos\\GAME\\GameJam\\Assets\\Editor\\AutoPrepareLevelFour.cs",
+                      "Existed":  false,
+                      "Expected":  "63462023c348b64a2b782841ba83ac8c13439c69c3bf3ee8b9e7b9329edf7dca"
+                  },
+                  {
+                      "Relative":  "Assets/Editor/AutoPrepareLevelFour.cs.meta",
+                      "Source":  "C:\\Users\\Erick\\Downloads\\Nivel4_Windows\\Archivos\\Assets\\Editor\\AutoPrepareLevelFour.cs.meta",
+                      "Target":  "C:\\Users\\Erick\\OneDrive\\Documentos\\GAME\\GameJam\\Assets\\Editor\\AutoPrepareLevelFour.cs.meta",
+                      "Existed":  false,
+                      "Expected":  "479badcb09b54791c6538167558ab4957c551a24324763853fe59908cb34836d"
+                  },
+                  {
+                      "Relative":  "Assets/Editor/LevelFourSetup.cs",
+                      "Source":  "C:\\Users\\Erick\\Downloads\\Nivel4_Windows\\Archivos\\Assets\\Editor\\LevelFourSetup.cs",
+                      "Target":  "C:\\Users\\Erick\\OneDrive\\Documentos\\GAME\\GameJam\\Assets\\Editor\\LevelFourSetup.cs",
+                      "Existed":  true,
+                      "Expected":  "422e36e07e0007ee83d051ddbf1d6d50b375ac0016a50edeb7dc876b8310c071"
+                  }
+              ]
+}

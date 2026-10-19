@@ -153,7 +153,7 @@ public class CameraIntroFollow : MonoBehaviour
     }
 
     /// Niveles que empiezan sin la animación de cámara.
-    public static string[] NoIntroScenes = { "Nivel2", "Nivel3" };
+    public static string[] NoIntroScenes = { "Nivel2", "Nivel3", "Nivel4", "Nivel5" };
 
     private void FinishIntroNow()
     {

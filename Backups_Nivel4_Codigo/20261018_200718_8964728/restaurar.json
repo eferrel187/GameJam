@@ -1,0 +1,68 @@
+﻿{
+    "project":  "C:\\Users\\Erick\\OneDrive\\Documentos\\GAME\\GameJam",
+    "files":  [
+                  {
+                      "Relative":  "Assets/01_Scripts/CameraIntroFollow.cs",
+                      "Source":  "C:\\Users\\Erick\\Downloads\\Nivel4_Windows\\Archivos\\Assets\\01_Scripts\\CameraIntroFollow.cs",
+                      "Target":  "C:\\Users\\Erick\\OneDrive\\Documentos\\GAME\\GameJam\\Assets\\01_Scripts\\CameraIntroFollow.cs",
+                      "Existed":  true,
+                      "Expected":  "44d51d1972818d37e89b13b22998c18575ed7091e8d4e2b80ffb2178669d52b3"
+                  },
+                  {
+                      "Relative":  "Assets/01_Scripts/Levels/HazardCylinder.cs",
+                      "Source":  "C:\\Users\\Erick\\Downloads\\Nivel4_Windows\\Archivos\\Assets\\01_Scripts\\Levels\\HazardCylinder.cs",
+                      "Target":  "C:\\Users\\Erick\\OneDrive\\Documentos\\GAME\\GameJam\\Assets\\01_Scripts\\Levels\\HazardCylinder.cs",
+                      "Existed":  true,
+                      "Expected":  "b0961c3cc1ea4126309f1057179adc2ffe36a431c32b679684817c324ee53782"
+                  },
+                  {
+                      "Relative":  "Assets/01_Scripts/Levels/Nivel4/Level4Rules.cs",
+                      "Source":  "C:\\Users\\Erick\\Downloads\\Nivel4_Windows\\Archivos\\Assets\\01_Scripts\\Levels\\Nivel4\\Level4Rules.cs",
+                      "Target":  "C:\\Users\\Erick\\OneDrive\\Documentos\\GAME\\GameJam\\Assets\\01_Scripts\\Levels\\Nivel4\\Level4Rules.cs",
+                      "Existed":  false,
+                      "Expected":  "b7d92f4c484a352e501c4e1872d7b050862dab1c4f92e3613ee459d3cd360c7e"
+                  },
+                  {
+                      "Relative":  "Assets/01_Scripts/Levels/Nivel4/Level4Rules.cs.meta",
+                      "Source":  "C:\\Users\\Erick\\Downloads\\Nivel4_Windows\\Archivos\\Assets\\01_Scripts\\Levels\\Nivel4\\Level4Rules.cs.meta",
+                      "Target":  "C:\\Users\\Erick\\OneDrive\\Documentos\\GAME\\GameJam\\Assets\\01_Scripts\\Levels\\Nivel4\\Level4Rules.cs.meta",
+                      "Existed":  false,
+                      "Expected":  "22e29001512f9d67ddc18f781c2ad92b762df062bae4918644e3ca5d23f75c03"
+                  },
+                  {
+                      "Relative":  "Assets/01_Scripts/Levels/Nivel4/RisingSpikes.cs",
+                      "Source":  "C:\\Users\\Erick\\Downloads\\Nivel4_Windows\\Archivos\\Assets\\01_Scripts\\Levels\\Nivel4\\RisingSpikes.cs",
+                      "Target":  "C:\\Users\\Erick\\OneDrive\\Documentos\\GAME\\GameJam\\Assets\\01_Scripts\\Levels\\Nivel4\\RisingSpikes.cs",
+                      "Existed":  false,
+                      "Expected":  "41089b19edec9573b7fc9673573eaa673f1b3b83b21c52d618563f7212250e69"
+                  },
+                  {
+                      "Relative":  "Assets/01_Scripts/Levels/Nivel4/RisingSpikes.cs.meta",
+                      "Source":  "C:\\Users\\Erick\\Downloads\\Nivel4_Windows\\Archivos\\Assets\\01_Scripts\\Levels\\Nivel4\\RisingSpikes.cs.meta",
+                      "Target":  "C:\\Users\\Erick\\OneDrive\\Documentos\\GAME\\GameJam\\Assets\\01_Scripts\\Levels\\Nivel4\\RisingSpikes.cs.meta",
+                      "Existed":  false,
+                      "Expected":  "8c36c583fc17fadc22354e2dd8f070c3d2f1dd76399bb3c61c6439988ca4ad99"
+                  },
+                  {
+                      "Relative":  "Assets/01_Scripts/Levels/Nivel4.meta",
+                      "Source":  "C:\\Users\\Erick\\Downloads\\Nivel4_Windows\\Archivos\\Assets\\01_Scripts\\Levels\\Nivel4.meta",
+                      "Target":  "C:\\Users\\Erick\\OneDrive\\Documentos\\GAME\\GameJam\\Assets\\01_Scripts\\Levels\\Nivel4.meta",
+                      "Existed":  false,
+                      "Expected":  "c6a9527df1e4a1d2c4d589fac81369f058809979b3e7ede09b86ab6889a935b5"
+                  },
+                  {
+                      "Relative":  "Assets/Editor/LevelFourSetup.cs",
+                      "Source":  "C:\\Users\\Erick\\Downloads\\Nivel4_Windows\\Archivos\\Assets\\Editor\\LevelFourSetup.cs",
+                      "Target":  "C:\\Users\\Erick\\OneDrive\\Documentos\\GAME\\GameJam\\Assets\\Editor\\LevelFourSetup.cs",
+                      "Existed":  false,
+                      "Expected":  "156ba5b4b2aeeb1fe0dac319e8bb4dc47fc37e63049254b5575c92fc56bed0da"
+                  },
+                  {
+                      "Relative":  "Assets/Editor/LevelFourSetup.cs.meta",
+                      "Source":  "C:\\Users\\Erick\\Downloads\\Nivel4_Windows\\Archivos\\Assets\\Editor\\LevelFourSetup.cs.meta",
+                      "Target":  "C:\\Users\\Erick\\OneDrive\\Documentos\\GAME\\GameJam\\Assets\\Editor\\LevelFourSetup.cs.meta",
+                      "Existed":  false,
+                      "Expected":  "b03449e507c3433c2ab08494f547e85d4463b7802edd0e194a9754a1a39d2fc6"
+                  }
+              ]
+}

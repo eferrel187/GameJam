@@ -1,0 +1,8 @@
+Salida con llave en z=37,16, sala del gato, mano y puerta oscura hacia Nivel5.
+Nivel4: 219 colisiones nuevas, con huecos reales en arcos y celdas.
+Nivel4: 6 sectores de puas moviles, 6 cepos y rodillo vertical.
+Llave real: celda izquierda z=16.2. Llave falsa: celda derecha z=9.9; se activa al salir.
+Nivel5: 210 colisiones nuevas, con huecos reales en arcos y celdas.
+Nivel5: llegada con personaje, camara, vidas y colisiones; conserva el diseno del mapa.
+Validacion: referencias locales, una camara, un Player y recursos de gato/cepo preparados.
+Respaldo de escenas y Build Settings: Backups_Nivel4/20261018_205351_1270119

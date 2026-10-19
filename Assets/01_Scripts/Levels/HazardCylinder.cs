@@ -213,7 +213,11 @@ public class HazardCylinder : MonoBehaviour
         // Giro sobre su eje (si rueda, en el sentido del avance).
         float sign = 1f;
         if (Active && Mathf.Abs(Vector3.Dot(axis, Vector3.up)) < 0.5f)
-            sign = Mathf.Sign(Vector3.Dot(Vector3.Cross(axis, Vector3.up), moveAxis.normalized * direction)) * -1f;
+        {
+            float rolling = Vector3.Dot(Vector3.Cross(axis, Vector3.up), moveAxis.normalized * direction);
+            // Si sube y baja no rueda por el suelo: conserva el giro propio.
+            if (Mathf.Abs(rolling) > 0.001f) sign = -Mathf.Sign(rolling);
+        }
         if (Active || !spinOnlyWhenActive)
             transform.RotateAround(Center, axis, spinSpeed * sign * dt);
         if (loop != null)

@@ -35,6 +35,7 @@ public class GuardDoorAndKey : MonoBehaviour
         if (current == null || current.hasKey) return;
         current.hasKey = true;
         KeyIsFake = true;
+        current.ShowKeyPickupMessage();
         GameAudio.Llave();
     }
 
@@ -243,19 +244,12 @@ public class GuardDoorAndKey : MonoBehaviour
             {
                 hasKey = true;
                 keyObject.SetActive(false);
-                // En los niveles 2 y 3 sin mensaje (solo sonido e icono):
-                // así no se distingue la llave buena de la falsa.
-                string level = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
-                if (level == "Tutorial" || level == "Nivel1")
-                {
-                    message = "¡Recogiste la llave!";
-                    messageUntil = Time.time + 2.5f;
-                }
+                // El mismo aviso del Nivel1 tambien en los niveles 2 y 3.
+                ShowKeyPickupMessage();
                 GameAudio.Llave();
                 HasKey = true;
                 KeyIsFake = false;
                 KeyPicked?.Invoke();
-                messageUntil = Time.time + 2.5f;
             }
         }
 
@@ -400,6 +394,14 @@ public class GuardDoorAndKey : MonoBehaviour
                     230f * scale, 380f * scale, 45f * scale),
                 message, style);
         }
+    }
+
+    void ShowKeyPickupMessage()
+    {
+        string level = gameObject.scene.name;
+        if (level != "Tutorial" && level != "Nivel1" && level != "Nivel2" && level != "Nivel3") return;
+        message = "¡Recogiste la llave!";
+        messageUntil = Time.time + 2.5f;
     }
 
     int previousLives = -1;
